@@ -31,13 +31,13 @@ classifiers = [
 keywords = ["liturgy", "document", "generator", "pdf", "handlebars", "template"]
 requires-python = ">=3.9"
 dependencies = [
+    "odfpy>=1.4.0",
+    "openpyxl>=3.1.0",
     "pandas>=2.0.0",
     "pybars3>=0.9.7",
-    "weasyprint>=66.0",
     "pypandoc-binary>=1.14",
-    "openpyxl>=3.1.0",
-    "odfpy>=1.4.0",
     "typst>=0.14.4",
+    "weasyprint>=66.0",
 ]
 
 [project.optional-dependencies]
