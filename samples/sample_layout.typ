@@ -35,8 +35,6 @@
   / People: #people
 ]
 
-#let hymn(number, title) = [Hymn #number: #title]
-
 #let rubric(body) = place(
   left,
   dx: -0.6in,
@@ -86,7 +84,7 @@
   #v(1.5in)
   #text(size: 22pt)[Order of Worship]
   #v(-.2in)
-  #text(size: 16pt)[December 14, 2025]
+  #text(size: 16pt)[{{FORMATTED_DATE}}]
   #v(1in)
 ]
 
@@ -111,36 +109,38 @@ ever. _Amen_
 #rubric[Stand]
 #response[Grace, mercy, and peace to you, from God the Father, Son, and Holy Spirit.][_Thanks Be to God_]
 
-Scripture: Psalm 99:2--3, 9
+Scripture: {{HYMNS.0}}
 
 #response[Lift Up Your Hearts!][_We Lift them up to the Lord!_]
 
 Prayer
 
-#hymn(551)[Lift Up Your Heads (Truro)]
+{{HYMNS.1}}
 
 #rubric[Sit]
 Admission of New Members: The Matson Family, The Woomer Family
 
-Household Baptisms: Everett Campbell Patton
+{{#if BAPTISMS}}
+Household Baptisms: {{BAPTISMS}}
 
 #rubric[Stand]
 #aside[
   Child of God, for you Jesus Christ came to this earth, struggled and suffered; for your sake He crossed Gethsemane and went through the darkness of Calvary; for your sake He cried: "It is finished"; for your sake He died and for your sake He overcame death; indeed for your sake, beloved. And this is the good news of our salvation: We love God, for He loved us first.
 ]
+{{/if}}
 
 = Confession of Sin
 
 #rubric[Sit]
 Exhortation
 
-#hymn(564)[Let All Mortal Flesh Keep Silence]
+{{HYMNS.2}}
 
 #rubric[Kneel]
-Prayer of Confession: Proverbs 6:16–19
+Prayer of Confession: {{PRAYER_VERSE}}
 
 #rubric[Stand]
-Assurance of Pardon: Proverbs 29:25
+Assurance of Pardon: {{ASSURANCE_VERSE}}
 
 #response[Your sins are forgiven through Christ][Thanks be to God!]
 
@@ -158,13 +158,13 @@ And I believe in one holy catholic and apostolic Church; I acknowledge one bapti
 Amen.
 ]
 
-#hymn(556)[Tell Out, My Soul, The Greatness Of The Lord!]
+{{HYMNS.3}}
 
 = Consecration
 
 Scripture Reading
-/ Old Testament: Isaiah 12:1-6
-/ New Testament: 1 Thessalonians 5:16-24
+/ Old Testament: {{OT_READING}}
+/ New Testament: {{NT_READING}}
 
 #response[The Word of the Lord][Thanks be to God!]
 
@@ -172,13 +172,13 @@ Scripture Reading
 Corporate Prayer
 
 #rubric[Stand]
-#hymn(615)[Prepare The Way, O Zion]
+{{HYMNS.4}}
 
 #rubric[Sit]
 Sermon (Psalm 133) – Jason Cherry
 
 #rubric[Stand]
-#hymn(250)[Blest The Man That Fears Jehovah] (Offering)
+{{HYMNS.5}}
 
 Prayer for Offerings
 
@@ -205,17 +205,16 @@ For those who are unable to partake of the wine, we also offer grape juice in th
 
 #response[Welcome to the Table of the Lord!][Thanks be to God!]
 
-#hymn(555)[Savior Of The Nations, Come]
+{{HYMNS.6}}
 
-#hymn(666)[The Son Of God Goes Forth To War]
 #rubric[Stand and Lift Hands]
-#hymn(732)[Lord, Bid Your Servant Go In Peace] (Doxology)
+{{HYMNS.7}}
 
 = Commissioning
 
 Charge & Benediction
 
-Numbers 6:24--26
+{{BENEDICTION_SCRIPTURE}}
 
 // ===================
 // Footer
