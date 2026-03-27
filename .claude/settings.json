@@ -1,0 +1,52 @@
+Fair point — those are more useful for loose scripts. In a proper `pyproject.toml`-based project you'd just run your test suite or linter to catch syntax errors. Here's the trimmed version:
+
+```json
+{
+  "permissions": {
+    "allow": [
+      "Read(**)",
+      "Bash(python --version)",
+      "Bash(ruff check *)",
+      "Bash(black --check *)",
+      "Bash(pytest --collect-only *)",
+      "Bash(pytest --dry-run *)",
+      "Bash(pip list)",
+      "Bash(pip show *)",
+      "Bash(pip check)",
+      "Bash(git status)",
+      "Bash(git log *)",
+      "Bash(git diff *)",
+      "Bash(git show *)",
+      "Bash(git branch *)",
+      "Bash(cat *)",
+      "Bash(grep *)",
+      "Bash(find * -name *)",
+      "Bash(wc *)"
+    ],
+    "deny": [
+      "Write(**)",
+      "Edit(**)",
+      "Bash(rm *)",
+      "Bash(mv *)",
+      "Bash(cp *)",
+      "Bash(pip install *)",
+      "Bash(pip uninstall *)",
+      "Bash(python -m venv *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(git reset *)",
+      "Bash(git checkout *)",
+      "Bash(git merge *)",
+      "Bash(git rebase *)",
+      "Bash(git tag *)",
+      "Bash(sudo *)",
+      "Bash(chmod *)",
+      "Bash(chown *)",
+      "Bash(tee *)"
+    ]
+  },
+  "env": {
+    "PYTHONDONTWRITEBYTECODE": "1"
+  }
+}
+```
