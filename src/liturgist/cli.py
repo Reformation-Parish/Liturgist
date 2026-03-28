@@ -48,6 +48,11 @@ def parse_arguments() -> argparse.Namespace:
         default="output/out.pdf",
     )
     parser.add_argument(
+        "--hymnal-dir",
+        dest="hymnal_dir",
+        help="Directory containing hymn sheet music files named by number (e.g., 552.pdf, 552.png, or 552-1.png)",
+    )
+    parser.add_argument(
         "schedule", help="A path to a schedule - csv, ods, xlsx, and json are supported"
     )
 
@@ -131,6 +136,17 @@ def main() -> None:
     except Exception as e:
         print(f"Error processing schedule data: {e}", file=sys.stderr)
         sys.exit(1)
+
+    # Load hymnal sheet music if requested
+    if args.hymnal_dir is not None:
+        hymnal_dir = Path(args.hymnal_dir)
+        if not hymnal_dir.is_dir():
+            print(f"Hymnal directory not found: {hymnal_dir}", file=sys.stderr)
+            sys.exit(1)
+        from .hymnal import load_hymnal_sheets
+
+        hymns = data.get("HYMNS", [])
+        data["HYMN_SHEETS"] = load_hymnal_sheets(hymns, hymnal_dir)
 
     # Output JSON if requested
     if args.print_json:
