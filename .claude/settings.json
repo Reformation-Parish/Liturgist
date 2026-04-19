@@ -1,4 +1,3 @@
-```json
 {
   "permissions": {
     "allow": [
@@ -47,4 +46,3 @@
     "PYTHONDONTWRITEBYTECODE": "1"
   }
 }
-```
