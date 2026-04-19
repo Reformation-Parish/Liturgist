@@ -161,6 +161,20 @@ def get_scripture_text(data: dict[str, Any], passage: str) -> str:
     return result
 
 
+def _find_column(csv_key: str, columns: pd.Index) -> str | None:
+    """Find a column that matches the csv_key exactly or starts with it.
+
+    A column matches if it equals the key, or starts with the key followed by
+    a non-digit character (so "Scripture 1" won't match "Scripture 10").
+    """
+    for col in columns:
+        if col == csv_key:
+            return col
+        if col.startswith(csv_key) and not col[len(csv_key)].isdigit():
+            return col
+    return None
+
+
 def process_schedule_data(
     schedule: pd.DataFrame,
     date: date,
@@ -203,8 +217,9 @@ def process_schedule_data(
 
     # Process CSV keys to template keys
     for csv_key, template_key in csv_key_to_template_key.items():
-        if csv_key in week.columns:
-            value = week[csv_key].iloc[0]
+        column = _find_column(csv_key, week.columns)
+        if column is not None:
+            value = week[column].iloc[0]
             if not pd.isnull(value):
                 if template_key not in data:
                     data[template_key] = value
