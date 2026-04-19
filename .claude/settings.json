@@ -1,5 +1,3 @@
-Fair point — those are more useful for loose scripts. In a proper `pyproject.toml`-based project you'd just run your test suite or linter to catch syntax errors. Here's the trimmed version:
-
 ```json
 {
   "permissions": {
