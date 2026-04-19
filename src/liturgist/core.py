@@ -13,24 +13,11 @@ import pandas as pd
 from pybars import Compiler
 
 hymn_csv_keys = [f"Hymn {i}" for i in range(10)]
-
-scripture_keys = {
-    "Scripture": "SCRIPTURE",
-    "Prayer Verse": "PRAYER_VERSE",
-    "Assurance Verse": "ASSURANCE_VERSE",
-    "Catechism Scripture References": "CATECHISM_SCRIPTURE",
-    "Benediction": "BENEDICTION_SCRIPTURE",
-    "OT Reading": "OT_READING",
-    "NT Reading": "NT_READING",
-    "Opening": "OPENING",
-    "Thanksgiving": "THANKSGIVING",
-    "Petitions": "PETITIONS",
-    "Sermon Passage": "SERMON_PASSAGE",
-}
+scripture_csv_keys = [f"Scripture {i}" for i in range(15)]
 
 csv_key_to_template_key = {
     **dict.fromkeys(hymn_csv_keys, "HYMNS"),
-    **scripture_keys,
+    **dict.fromkeys(scripture_csv_keys, "SCRIPTURES"),
     "Question": "CATECHISM_QUESTION",
     "Answer": "CATECHISM_ANSWER",
     "Baptisms": "BAPTISMS",
@@ -232,10 +219,12 @@ def process_schedule_data(
         if json_path.is_file():
             bible_text = json_path.read_text(encoding="utf-8")
             bible_data = json.loads(bible_text)
-            for template_key in scripture_keys.values():
-                value = data.get(template_key)
-                if value is not None:
-                    text = get_scripture_text(bible_data, value)
-                    data[f"{template_key}_TEXT"] = text
+            scriptures = data.get("SCRIPTURES")
+            if scriptures is not None:
+                if not isinstance(scriptures, list):
+                    scriptures = [scriptures]
+                data["SCRIPTURES_TEXT"] = [
+                    get_scripture_text(bible_data, ref) for ref in scriptures
+                ]
 
     return data

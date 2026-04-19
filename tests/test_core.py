@@ -28,7 +28,7 @@ def test_read_schedule_csv():
     # Create a temporary CSV file
     with tempfile.NamedTemporaryFile(mode="w", suffix=".csv", delete=False) as f:
         f.write("Header Row\n")
-        f.write("Date,Hymn 1,Scripture\n")
+        f.write("Date,Hymn 1,Scripture 0\n")
         f.write("2024-02-18,Hymn 290,Acts 2:34-35\n")
         temp_path = f.name
 
@@ -37,7 +37,7 @@ def test_read_schedule_csv():
         assert isinstance(df, pd.DataFrame)
         assert "Date" in df.columns
         assert "Hymn 1" in df.columns
-        assert "Scripture" in df.columns
+        assert "Scripture 0" in df.columns
     finally:
         Path(temp_path).unlink()
 
@@ -169,7 +169,7 @@ def test_process_schedule_data():
     data = {
         "Date": ["2024-02-18"],
         "Hymn 1": ["Hymn 290 - Hallelujah, Praise Jehovah"],
-        "Scripture": ["Acts 2:34-35"],
+        "Scripture 0": ["Acts 2:34-35"],
         "Question": ["Q50. What is required in the second commandment?"],
         "Answer": [
             "A. The second commandment requireth the receiving, observing, and keeping pure and entire, all such religious worship and ordinances as God hath appointed in his Word."
@@ -183,7 +183,7 @@ def test_process_schedule_data():
     assert result["DATE"] == "2024-02-18"
     assert result["FORMATTED_DATE"] == "Sunday, February 18, 2024"
     assert result["HYMNS"] == "Hymn 290 - Hallelujah, Praise Jehovah"
-    assert result["SCRIPTURE"] == "Acts 2:34-35"
+    assert result["SCRIPTURES"] == "Acts 2:34-35"
     assert (
         result["CATECHISM_QUESTION"]
         == "Q50. What is required in the second commandment?"
