@@ -21,8 +21,6 @@
       "Bash(wc *)"
     ],
     "deny": [
-      "Write(**)",
-      "Edit(**)",
       "Bash(rm *)",
       "Bash(mv *)",
       "Bash(cp *)",
