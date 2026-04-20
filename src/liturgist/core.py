@@ -12,8 +12,8 @@ from typing import Any, Union
 import pandas as pd
 from pybars import Compiler
 
-hymn_csv_keys = [f"Hymn {i}" for i in range(10)]
-scripture_csv_keys = [f"Scripture {i}" for i in range(15)]
+hymn_csv_keys = [f"Hymn {i}" for i in range(1, 11)]
+scripture_csv_keys = [f"Scripture {i}" for i in range(1, 16)]
 
 csv_key_to_template_key = {
     **dict.fromkeys(hymn_csv_keys, "HYMNS"),
@@ -218,15 +218,34 @@ def process_schedule_data(
     # Process CSV keys to template keys
     for csv_key, template_key in csv_key_to_template_key.items():
         column = _find_column(csv_key, week.columns)
-        if column is not None:
-            value = week[column].iloc[0]
-            if not pd.isnull(value):
-                if template_key not in data:
+
+        # For numbered array keys, use positional insertion so gaps
+        # are preserved as None rather than shifting indices.
+        parts = csv_key.rsplit(" ", 1)
+        is_array_key = len(parts) == 2 and parts[1].isdigit()
+
+        if is_array_key:
+            idx = int(parts[1]) - 1
+            if template_key not in data:
+                data[template_key] = []
+            arr = data[template_key]
+            while len(arr) <= idx:
+                arr.append(None)
+            if column is not None:
+                value = week[column].iloc[0]
+                if not pd.isnull(value):
+                    arr[idx] = value
+        else:
+            if column is not None:
+                value = week[column].iloc[0]
+                if not pd.isnull(value):
                     data[template_key] = value
-                else:
-                    if not isinstance(data[template_key], list):
-                        data[template_key] = [data[template_key]]
-                    data[template_key].append(value)
+
+    # Trim trailing None entries from array values
+    for key, value in data.items():
+        if isinstance(value, list):
+            while value and value[-1] is None:
+                value.pop()
 
     # Process bible JSON if provided
     if bible_json_path is not None:
@@ -238,8 +257,9 @@ def process_schedule_data(
             if scriptures is not None:
                 if not isinstance(scriptures, list):
                     scriptures = [scriptures]
-                data["SCRIPTURES_TEXT"] = [
-                    get_scripture_text(bible_data, ref) for ref in scriptures
+                data["SCRIPTURE_TEXTS"] = [
+                    get_scripture_text(bible_data, ref) if ref is not None else None
+                    for ref in scriptures
                 ]
 
     return data

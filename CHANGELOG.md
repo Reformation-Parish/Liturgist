@@ -8,9 +8,11 @@
 
 ### Changed
 - Scripture references are modeled as an array, like hymns.
+- Schedules index arrays from one, handlebars from zero. The assumption is non-programmers might be editing the schedule and zero is better in programming contexts.
+- If a particular array entry is missing from the schedule, a null value will be written to the array to preserve index pairing for subsequent indices.
 
 ### Deprecated
-
+ 
 ### Removed
 
 ### Fixed
