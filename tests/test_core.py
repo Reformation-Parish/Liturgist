@@ -28,7 +28,7 @@ def test_read_schedule_csv():
     # Create a temporary CSV file
     with tempfile.NamedTemporaryFile(mode="w", suffix=".csv", delete=False) as f:
         f.write("Header Row\n")
-        f.write("Date,Hymn 1,Scripture\n")
+        f.write("Date,Hymn 1,Scripture 1\n")
         f.write("2024-02-18,Hymn 290,Acts 2:34-35\n")
         temp_path = f.name
 
@@ -37,7 +37,7 @@ def test_read_schedule_csv():
         assert isinstance(df, pd.DataFrame)
         assert "Date" in df.columns
         assert "Hymn 1" in df.columns
-        assert "Scripture" in df.columns
+        assert "Scripture 1" in df.columns
     finally:
         Path(temp_path).unlink()
 
@@ -100,7 +100,7 @@ def test_non_contiguous_references_found():
     result = get_scripture_text(bible_data, "John 3:16-17 John 4:1")
     assert (
         result
-        == "16. ‹For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.› 17. ‹For God sent not his Son into the world to condemn the world; but that the world through him might be saved.› (...) 1. When therefore the Lord knew how the Pharisees had heard that Jesus made and baptized more disciples than John,"
+        == "16. ‹For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.› 17. ‹For God sent not his Son into the world to condemn the world; but that the world through him might be saved.› (...) When therefore the Lord knew how the Pharisees had heard that Jesus made and baptized more disciples than John,"
     )
 
 
@@ -113,7 +113,7 @@ def test_chapter_verse_reference_found():
     result = get_scripture_text(bible_data, "John 3:16")
     assert (
         result
-        == "16. ‹For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.›"
+        == "‹For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.›"
     )
 
 
@@ -136,7 +136,7 @@ def test_chapterless_reference_found():
     result = get_scripture_text(bible_data, "Jude 3")
     assert (
         result
-        == "3. Beloved, when I gave all diligence to write unto you of the common salvation, it was needful for me to write unto you, and exhort [you] that ye should earnestly contend for the faith which was once delivered unto the saints."
+        == "Beloved, when I gave all diligence to write unto you of the common salvation, it was needful for me to write unto you, and exhort [you] that ye should earnestly contend for the faith which was once delivered unto the saints."
     )
 
 
@@ -169,7 +169,7 @@ def test_process_schedule_data():
     data = {
         "Date": ["2024-02-18"],
         "Hymn 1": ["Hymn 290 - Hallelujah, Praise Jehovah"],
-        "Scripture": ["Acts 2:34-35"],
+        "Scripture 1": ["Acts 2:34-35"],
         "Question": ["Q50. What is required in the second commandment?"],
         "Answer": [
             "A. The second commandment requireth the receiving, observing, and keeping pure and entire, all such religious worship and ordinances as God hath appointed in his Word."
@@ -182,8 +182,8 @@ def test_process_schedule_data():
 
     assert result["DATE"] == "2024-02-18"
     assert result["FORMATTED_DATE"] == "Sunday, February 18, 2024"
-    assert result["HYMNS"] == "Hymn 290 - Hallelujah, Praise Jehovah"
-    assert result["SCRIPTURE"] == "Acts 2:34-35"
+    assert result["HYMNS"] == ["Hymn 290 - Hallelujah, Praise Jehovah"]
+    assert result["SCRIPTURE_REFS"] == ["Acts 2:34-35"]
     assert (
         result["CATECHISM_QUESTION"]
         == "Q50. What is required in the second commandment?"
@@ -192,6 +192,97 @@ def test_process_schedule_data():
         result["CATECHISM_ANSWER"]
         == "A. The second commandment requireth the receiving, observing, and keeping pure and entire, all such religious worship and ordinances as God hath appointed in his Word."
     )
+
+
+def test_scripture_array_from_numbered_columns():
+    """Test that multiple Scripture N columns build a SCRIPTURE_REFS array."""
+    data = {
+        "Date": ["2024-02-18"],
+        "Scripture 1": ["Genesis 1:1"],
+        "Scripture 2": ["Psalm 23:1-3"],
+        "Scripture 3": ["John 3:16"],
+    }
+    schedule = pd.DataFrame(data)
+    date = pd.to_datetime("2024-02-18").date()
+    result = process_schedule_data(schedule, date)
+
+    assert result["SCRIPTURE_REFS"] == ["Genesis 1:1", "Psalm 23:1-3", "John 3:16"]
+
+
+def test_scripture_array_with_descriptive_headings():
+    """Test that columns like 'Scripture 1 - Call to Worship' match Scripture 1."""
+    data = {
+        "Date": ["2024-02-18"],
+        "Scripture 1 - Call to Worship": ["Genesis 1:1"],
+        "Scripture 2 - Prayer Verse": ["Psalm 23:1-3"],
+        "Scripture 3 - Assurance": ["John 3:16"],
+    }
+    schedule = pd.DataFrame(data)
+    date = pd.to_datetime("2024-02-18").date()
+    result = process_schedule_data(schedule, date)
+
+    assert result["SCRIPTURE_REFS"] == ["Genesis 1:1", "Psalm 23:1-3", "John 3:16"]
+
+
+def test_scripture_heading_does_not_match_longer_number():
+    """Test that 'Scripture 1' does not match a column named 'Scripture 10'."""
+    data = {
+        "Date": ["2024-02-18"],
+        "Scripture 1": ["Genesis 1:1"],
+        "Scripture 10": ["Psalm 23:1-3"],
+    }
+    schedule = pd.DataFrame(data)
+    date = pd.to_datetime("2024-02-18").date()
+    result = process_schedule_data(schedule, date)
+
+    assert result["SCRIPTURE_REFS"][0] == "Genesis 1:1"
+    assert result["SCRIPTURE_REFS"][9] == "Psalm 23:1-3"
+    assert all(v is None for v in result["SCRIPTURE_REFS"][1:9])
+
+
+def test_scripture_text_expansion_as_array():
+    """Test that EXPANDED_SCRIPTURE_REFS is built as an array matching SCRIPTURE_REFS."""
+    data = {
+        "Date": ["2024-02-18"],
+        "Scripture 1": ["John 3:16"],
+        "Scripture 2": ["Jude 3"],
+    }
+    schedule = pd.DataFrame(data)
+    date = pd.to_datetime("2024-02-18").date()
+    result = process_schedule_data(schedule, date, bible_json_path="samples/kjv.json")
+
+    assert isinstance(result["EXPANDED_SCRIPTURE_REFS"], list)
+    assert len(result["EXPANDED_SCRIPTURE_REFS"]) == 2
+    assert "For God so loved the world" in result["EXPANDED_SCRIPTURE_REFS"][0]
+    assert "earnestly contend for the faith" in result["EXPANDED_SCRIPTURE_REFS"][1]
+
+
+def test_hymn_heading_prefix_match():
+    """Test that descriptive hymn headings like 'Hymn 1 - Processional' also work."""
+    data = {
+        "Date": ["2024-02-18"],
+        "Hymn 1 - Processional": ["Hymn 290 - Hallelujah"],
+        "Hymn 2 - Confession": ["Hymn 620 - Stricken"],
+    }
+    schedule = pd.DataFrame(data)
+    date = pd.to_datetime("2024-02-18").date()
+    result = process_schedule_data(schedule, date)
+
+    assert result["HYMNS"] == ["Hymn 290 - Hallelujah", "Hymn 620 - Stricken"]
+
+
+def test_array_preserves_gaps_as_none():
+    """Test that missing columns in the middle produce None, not a shifted array."""
+    data = {
+        "Date": ["2024-02-18"],
+        "Scripture 1": ["Genesis 1:1"],
+        "Scripture 3": ["John 3:16"],
+    }
+    schedule = pd.DataFrame(data)
+    date = pd.to_datetime("2024-02-18").date()
+    result = process_schedule_data(schedule, date)
+
+    assert result["SCRIPTURE_REFS"] == ["Genesis 1:1", None, "John 3:16"]
 
 
 def test_process_schedule_data_date_not_found():

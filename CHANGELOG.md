@@ -3,11 +3,16 @@
 ## Unreleased
 
 ### Added
+- Schedule column headers that build arrays are matched by prefix, so you can add a note about the conventional purpose of data at this index. 
+	e.g. `Hymn 1 - Call to Worship`.
 
 ### Changed
+- Scripture references are modeled as an array, like hymns.
+- Schedules index arrays from one, handlebars from zero. The assumption is non-programmers might be editing the schedule and zero is better in programming contexts.
+- If a particular array entry is missing from the schedule, a null value will be written to the array to preserve index pairing for subsequent indices.
 
 ### Deprecated
-
+ 
 ### Removed
 
 ### Fixed

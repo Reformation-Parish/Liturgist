@@ -12,25 +12,12 @@ from typing import Any, Union
 import pandas as pd
 from pybars import Compiler
 
-hymn_csv_keys = [f"Hymn {i}" for i in range(10)]
-
-scripture_keys = {
-    "Scripture": "SCRIPTURE",
-    "Prayer Verse": "PRAYER_VERSE",
-    "Assurance Verse": "ASSURANCE_VERSE",
-    "Catechism Scripture References": "CATECHISM_SCRIPTURE",
-    "Benediction": "BENEDICTION_SCRIPTURE",
-    "OT Reading": "OT_READING",
-    "NT Reading": "NT_READING",
-    "Opening": "OPENING",
-    "Thanksgiving": "THANKSGIVING",
-    "Petitions": "PETITIONS",
-    "Sermon Passage": "SERMON_PASSAGE",
-}
+hymn_csv_keys = [f"Hymn {i}" for i in range(1, 50)]
+scripture_csv_keys = [f"Scripture {i}" for i in range(1, 50)]
 
 csv_key_to_template_key = {
     **dict.fromkeys(hymn_csv_keys, "HYMNS"),
-    **scripture_keys,
+    **dict.fromkeys(scripture_csv_keys, "SCRIPTURE_REFS"),
     "Question": "CATECHISM_QUESTION",
     "Answer": "CATECHISM_ANSWER",
     "Baptisms": "BAPTISMS",
@@ -151,12 +138,14 @@ def get_scripture_text(data: dict[str, Any], passage: str) -> str:
             start_verse_index = int(precise_match_start) - 1
             end_verse_index = int(precise_match_end)
 
-            verses = [
-                f"{idx + 1 + start_verse_index}. {verse}"
-                for idx, verse in enumerate(
-                    chapter["verses"][start_verse_index:end_verse_index]
-                )
-            ]
+            selected = chapter["verses"][start_verse_index:end_verse_index]
+            if len(selected) == 1:
+                verses = [selected[0]]
+            else:
+                verses = [
+                    f"{idx + 1 + start_verse_index}. {verse}"
+                    for idx, verse in enumerate(selected)
+                ]
         else:
             verses = [
                 f"{idx + 1}. {verse}" for idx, verse in enumerate(chapter["verses"])
@@ -172,6 +161,20 @@ def get_scripture_text(data: dict[str, Any], passage: str) -> str:
         current_match = next_match
 
     return result
+
+
+def _find_column(csv_key: str, columns: pd.Index) -> str | None:
+    """Find a column that matches the csv_key exactly or starts with it.
+
+    A column matches if it equals the key, or starts with the key followed by
+    a non-digit character (so "Scripture 1" won't match "Scripture 10").
+    """
+    for col in columns:
+        if col == csv_key:
+            return col
+        if col.startswith(csv_key) and not col[len(csv_key)].isdigit():
+            return col
+    return None
 
 
 def process_schedule_data(
@@ -216,15 +219,35 @@ def process_schedule_data(
 
     # Process CSV keys to template keys
     for csv_key, template_key in csv_key_to_template_key.items():
-        if csv_key in week.columns:
-            value = week[csv_key].iloc[0]
-            if not pd.isnull(value):
-                if template_key not in data:
+        column = _find_column(csv_key, week.columns)
+
+        # For numbered array keys, use positional insertion so gaps
+        # are preserved as None rather than shifting indices.
+        parts = csv_key.rsplit(" ", 1)
+        is_array_key = len(parts) == 2 and parts[1].isdigit()
+
+        if is_array_key:
+            idx = int(parts[1]) - 1
+            if template_key not in data:
+                data[template_key] = []
+            arr = data[template_key]
+            while len(arr) <= idx:
+                arr.append(None)
+            if column is not None:
+                value = week[column].iloc[0]
+                if not pd.isnull(value):
+                    arr[idx] = value
+        else:
+            if column is not None:
+                value = week[column].iloc[0]
+                if not pd.isnull(value):
                     data[template_key] = value
-                else:
-                    if not isinstance(data[template_key], list):
-                        data[template_key] = [data[template_key]]
-                    data[template_key].append(value)
+
+    # Trim trailing None entries from array values
+    for value in data.values():
+        if isinstance(value, list):
+            while value and value[-1] is None:
+                value.pop()
 
     # Process bible JSON if provided
     if bible_json_path is not None:
@@ -232,10 +255,13 @@ def process_schedule_data(
         if json_path.is_file():
             bible_text = json_path.read_text(encoding="utf-8")
             bible_data = json.loads(bible_text)
-            for template_key in scripture_keys.values():
-                value = data.get(template_key)
-                if value is not None:
-                    text = get_scripture_text(bible_data, value)
-                    data[f"{template_key}_TEXT"] = text
+            scriptures = data.get("SCRIPTURE_REFS")
+            if scriptures is not None:
+                if not isinstance(scriptures, list):
+                    scriptures = [scriptures]
+                data["EXPANDED_SCRIPTURE_REFS"] = [
+                    get_scripture_text(bible_data, ref) if ref is not None else None
+                    for ref in scriptures
+                ]
 
     return data
