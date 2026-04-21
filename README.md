@@ -5,7 +5,7 @@ A liturgical document generator
 
 ### Install from Source
 ```sh
-git clone git@github.com:Trinity-Reformed-Church-GA/Liturgist.git
+git clone git@github.com:jzbrooks/Liturgist.git
 cd Liturgist
 pip install .
 ```
@@ -13,7 +13,7 @@ pip install .
 ### Development Installation
 For development, install with development dependencies:
 ```sh
-git clone git@github.com:Trinity-Reformed-Church-GA/Liturgist.git
+git clone git@github.com:jzbrooks/Liturgist.git
 cd Liturgist
 pip install -e ".[dev]"
 ```
@@ -62,14 +62,13 @@ Example output:
     "Hymn 337 - Immortal, Invisible, God Only Wise", 
     "Hymn 537 - Rejoice, the Lord is King"
   ], 
-  "SCRIPTURE": "Acts 2:34-35", 
-  "PRAYER_VERSE": "Acts 2:36-37", 
-  "ASSURANCE_VERSE": "Acts 5:30-31", 
-  "OT_READING": "Genesis 22:1-18", 
-  "NT_READING": "James 1:12-21", 
+  "SCRIPTURE_REFS": [
+    "Acts 2:34-35",
+    "Acts 2:36-37",
+    "Acts 5:30-31"
+  ],
   "CATECHISM_QUESTION": "Q51. What is forbidden in the second commandment?", 
-  "CATECHISM_ANSWER": "A. The second commandment forbiddeth the worshipping of God by images, or any other way not appointed in his Word.", 
-  "BENEDICTION": "Ephesians 3:20-21"
+  "CATECHISM_ANSWER": "A. The second commandment forbiddeth the worshipping of God by images, or any other way not appointed in his Word."
 }
 ```
 
@@ -87,14 +86,15 @@ liturgist --print-json liturgy.ods | jq
     "Hymn 337 - Immortal, Invisible, God Only Wise",
     "Hymn 537 - Rejoice, the Lord is King"
   ],
-  "SCRIPTURE": "Hosea 2:23",
-  "PRAYER_VERSE": "Hosea 5:15",
-  "ASSURANCE_VERSE": "Hosea 6:1-2",
-  "OT_READING": "Deuteronomy 10:12-22",
-  "NT_READING": "Philippians 2:12-18",
+  "SCRIPTURE_REFS": [
+    "Hosea 2:23",
+    "Hosea 5:15",
+    "Hosea 6:1-2",
+    "Deuteronomy 10:12-22",
+    "Philippians 2:12-18"
+  ],
   "CATECHISM_QUESTION": "Q50. What is required in the second commandment?",
   "CATECHISM_ANSWER": "A. The second commandment requireth the receiving, observing, and keeping pure and entire, all such religious worship and ordinances as God hath appointed in his Word.",
-  "BENEDICTION": "2 Thessalonians 2:16-17",
   "BAPTISMS": "Ginger Rogers"
 }
 ```
@@ -112,6 +112,16 @@ Output:
 "Hymn 403 - Our God, Our Help in Ages Past"
 "Hymn 337 - Immortal, Invisible, God Only Wise"
 "Hymn 537 - Rejoice, the Lord is King"
+```
+
+Or get the second scripture reference:
+```sh
+liturgist --print-json liturgy.ods | jq '.SCRIPTURE_REFS[1]'
+```
+
+Output:
+```
+"Acts 2:36-37"
 ```
 
 ### Rendering a Handlebars Template
@@ -172,26 +182,25 @@ liturgist ./liturgy.ods --template ./officiant-order-of-worship.md -o ./output/o
 - **ODT**: OpenDocument Text format  
 - **Text**: Any other extension (HTML, Markdown, plain text, etc.)
 
+## Schedule Columns
+
+Schedule columns named `Hymn N` and `Scripture N` (where N is 1-49) are collected into the `HYMNS` and `SCRIPTURE_REFS` arrays respectively. Columns may include descriptive suffixes (e.g., `Scripture 1 - Call to Worship`) and will still be matched. Gaps in numbering are preserved as `null` in the arrays.
+
 ## Template Variables
 
 The following variables are available in templates:
 
 - `DATE`: ISO format date (YYYY-MM-DD)
 - `FORMATTED_DATE`: Human-readable date (e.g., "Sunday, February 18, 2024")
-- `HYMNS`: Array of hymn titles
-- `SCRIPTURE`: Main scripture reading
-- `PRAYER_VERSE`: Prayer verse reference
-- `ASSURANCE_VERSE`: Assurance verse reference
-- `OT_READING`: Old Testament reading
-- `NT_READING`: New Testament reading
+- `HYMNS`: Array of hymn titles (from `Hymn 1`, `Hymn 2`, ... columns)
+- `SCRIPTURE_REFS`: Array of scripture references (from `Scripture 1`, `Scripture 2`, ... columns)
 - `CATECHISM_QUESTION`: Catechism question
 - `CATECHISM_ANSWER`: Catechism answer
 - `BAPTISMS`: Baptism information
 - `COLLECT`: Collect prayer
 - `CHURCH_OF_THE_MONTH`: Featured church
-- `BENEDICTION_SCRIPTURE`: Benediction scripture reference
 
-When using `--bible-json-path`, scripture text variables are also available with `_TEXT` suffix (e.g., `SCRIPTURE_TEXT`).
+The `EXPANDED_SCRIPTURE_REFS` array is also available, containing the full text of each entry in `SCRIPTURE_REFS` provided a `--bible-json-path` file is provided.
 
 ## Examples
 
@@ -210,7 +219,8 @@ liturgist --template bulletin.html schedule.xlsx -o bulletin.pdf
 liturgist schedule.xlsx --template service.md -o "service-2024-03-03.docx" --date 2024-03-03
 ```
 
-### Include Scripture Text
+### Expand Scripture References
+The following will create a new array, `EXPANDED_SCRIPTURE_REFS`, whos indicies correspond to the ref at the same index in `SCRIPTURE_REFS`.
 ```bash
 liturgist schedule.xlsx --template service.html --bible-json-path bible.json -o service.pdf
 ```
