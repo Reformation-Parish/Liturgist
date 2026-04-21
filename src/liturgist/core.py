@@ -244,7 +244,7 @@ def process_schedule_data(
                     data[template_key] = value
 
     # Trim trailing None entries from array values
-    for key, value in data.items():
+    for value in data.values():
         if isinstance(value, list):
             while value and value[-1] is None:
                 value.pop()
