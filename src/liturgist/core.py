@@ -138,12 +138,14 @@ def get_scripture_text(data: dict[str, Any], passage: str) -> str:
             start_verse_index = int(precise_match_start) - 1
             end_verse_index = int(precise_match_end)
 
-            verses = [
-                f"{idx + 1 + start_verse_index}. {verse}"
-                for idx, verse in enumerate(
-                    chapter["verses"][start_verse_index:end_verse_index]
-                )
-            ]
+            selected = chapter["verses"][start_verse_index:end_verse_index]
+            if len(selected) == 1:
+                verses = [selected[0]]
+            else:
+                verses = [
+                    f"{idx + 1 + start_verse_index}. {verse}"
+                    for idx, verse in enumerate(selected)
+                ]
         else:
             verses = [
                 f"{idx + 1}. {verse}" for idx, verse in enumerate(chapter["verses"])

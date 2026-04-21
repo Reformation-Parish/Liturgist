@@ -100,7 +100,7 @@ def test_non_contiguous_references_found():
     result = get_scripture_text(bible_data, "John 3:16-17 John 4:1")
     assert (
         result
-        == "16. ‹For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.› 17. ‹For God sent not his Son into the world to condemn the world; but that the world through him might be saved.› (...) 1. When therefore the Lord knew how the Pharisees had heard that Jesus made and baptized more disciples than John,"
+        == "16. ‹For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.› 17. ‹For God sent not his Son into the world to condemn the world; but that the world through him might be saved.› (...) When therefore the Lord knew how the Pharisees had heard that Jesus made and baptized more disciples than John,"
     )
 
 
@@ -113,7 +113,7 @@ def test_chapter_verse_reference_found():
     result = get_scripture_text(bible_data, "John 3:16")
     assert (
         result
-        == "16. ‹For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.›"
+        == "‹For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.›"
     )
 
 
@@ -136,7 +136,7 @@ def test_chapterless_reference_found():
     result = get_scripture_text(bible_data, "Jude 3")
     assert (
         result
-        == "3. Beloved, when I gave all diligence to write unto you of the common salvation, it was needful for me to write unto you, and exhort [you] that ye should earnestly contend for the faith which was once delivered unto the saints."
+        == "Beloved, when I gave all diligence to write unto you of the common salvation, it was needful for me to write unto you, and exhort [you] that ye should earnestly contend for the faith which was once delivered unto the saints."
     )
 
 
