@@ -12,8 +12,8 @@ from typing import Any, Union
 import pandas as pd
 from pybars import Compiler
 
-hymn_csv_keys = [f"Hymn {i}" for i in range(1, 11)]
-scripture_csv_keys = [f"Scripture {i}" for i in range(1, 16)]
+hymn_csv_keys = [f"Hymn {i}" for i in range(1, 50)]
+scripture_csv_keys = [f"Scripture {i}" for i in range(1, 50)]
 
 csv_key_to_template_key = {
     **dict.fromkeys(hymn_csv_keys, "HYMNS"),
