@@ -17,7 +17,7 @@ scripture_csv_keys = [f"Scripture {i}" for i in range(1, 50)]
 
 csv_key_to_template_key = {
     **dict.fromkeys(hymn_csv_keys, "HYMNS"),
-    **dict.fromkeys(scripture_csv_keys, "SCRIPTURES"),
+    **dict.fromkeys(scripture_csv_keys, "SCRIPTURE_REFS"),
     "Question": "CATECHISM_QUESTION",
     "Answer": "CATECHISM_ANSWER",
     "Baptisms": "BAPTISMS",
@@ -255,11 +255,11 @@ def process_schedule_data(
         if json_path.is_file():
             bible_text = json_path.read_text(encoding="utf-8")
             bible_data = json.loads(bible_text)
-            scriptures = data.get("SCRIPTURES")
+            scriptures = data.get("SCRIPTURE_REFS")
             if scriptures is not None:
                 if not isinstance(scriptures, list):
                     scriptures = [scriptures]
-                data["SCRIPTURE_TEXTS"] = [
+                data["EXPANDED_SCRIPTURE_REFS"] = [
                     get_scripture_text(bible_data, ref) if ref is not None else None
                     for ref in scriptures
                 ]

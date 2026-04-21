@@ -183,7 +183,7 @@ def test_process_schedule_data():
     assert result["DATE"] == "2024-02-18"
     assert result["FORMATTED_DATE"] == "Sunday, February 18, 2024"
     assert result["HYMNS"] == ["Hymn 290 - Hallelujah, Praise Jehovah"]
-    assert result["SCRIPTURES"] == ["Acts 2:34-35"]
+    assert result["SCRIPTURE_REFS"] == ["Acts 2:34-35"]
     assert (
         result["CATECHISM_QUESTION"]
         == "Q50. What is required in the second commandment?"
@@ -195,7 +195,7 @@ def test_process_schedule_data():
 
 
 def test_scripture_array_from_numbered_columns():
-    """Test that multiple Scripture N columns build a SCRIPTURES array."""
+    """Test that multiple Scripture N columns build a SCRIPTURE_REFS array."""
     data = {
         "Date": ["2024-02-18"],
         "Scripture 1": ["Genesis 1:1"],
@@ -206,7 +206,7 @@ def test_scripture_array_from_numbered_columns():
     date = pd.to_datetime("2024-02-18").date()
     result = process_schedule_data(schedule, date)
 
-    assert result["SCRIPTURES"] == ["Genesis 1:1", "Psalm 23:1-3", "John 3:16"]
+    assert result["SCRIPTURE_REFS"] == ["Genesis 1:1", "Psalm 23:1-3", "John 3:16"]
 
 
 def test_scripture_array_with_descriptive_headings():
@@ -221,7 +221,7 @@ def test_scripture_array_with_descriptive_headings():
     date = pd.to_datetime("2024-02-18").date()
     result = process_schedule_data(schedule, date)
 
-    assert result["SCRIPTURES"] == ["Genesis 1:1", "Psalm 23:1-3", "John 3:16"]
+    assert result["SCRIPTURE_REFS"] == ["Genesis 1:1", "Psalm 23:1-3", "John 3:16"]
 
 
 def test_scripture_heading_does_not_match_longer_number():
@@ -235,13 +235,13 @@ def test_scripture_heading_does_not_match_longer_number():
     date = pd.to_datetime("2024-02-18").date()
     result = process_schedule_data(schedule, date)
 
-    assert result["SCRIPTURES"][0] == "Genesis 1:1"
-    assert result["SCRIPTURES"][9] == "Psalm 23:1-3"
-    assert all(v is None for v in result["SCRIPTURES"][1:9])
+    assert result["SCRIPTURE_REFS"][0] == "Genesis 1:1"
+    assert result["SCRIPTURE_REFS"][9] == "Psalm 23:1-3"
+    assert all(v is None for v in result["SCRIPTURE_REFS"][1:9])
 
 
 def test_scripture_text_expansion_as_array():
-    """Test that SCRIPTURE_TEXTS is built as an array matching SCRIPTURES."""
+    """Test that EXPANDED_SCRIPTURE_REFS is built as an array matching SCRIPTURE_REFS."""
     data = {
         "Date": ["2024-02-18"],
         "Scripture 1": ["John 3:16"],
@@ -251,10 +251,10 @@ def test_scripture_text_expansion_as_array():
     date = pd.to_datetime("2024-02-18").date()
     result = process_schedule_data(schedule, date, bible_json_path="samples/kjv.json")
 
-    assert isinstance(result["SCRIPTURE_TEXTS"], list)
-    assert len(result["SCRIPTURE_TEXTS"]) == 2
-    assert "For God so loved the world" in result["SCRIPTURE_TEXTS"][0]
-    assert "earnestly contend for the faith" in result["SCRIPTURE_TEXTS"][1]
+    assert isinstance(result["EXPANDED_SCRIPTURE_REFS"], list)
+    assert len(result["EXPANDED_SCRIPTURE_REFS"]) == 2
+    assert "For God so loved the world" in result["EXPANDED_SCRIPTURE_REFS"][0]
+    assert "earnestly contend for the faith" in result["EXPANDED_SCRIPTURE_REFS"][1]
 
 
 def test_hymn_heading_prefix_match():
@@ -282,7 +282,7 @@ def test_array_preserves_gaps_as_none():
     date = pd.to_datetime("2024-02-18").date()
     result = process_schedule_data(schedule, date)
 
-    assert result["SCRIPTURES"] == ["Genesis 1:1", None, "John 3:16"]
+    assert result["SCRIPTURE_REFS"] == ["Genesis 1:1", None, "John 3:16"]
 
 
 def test_process_schedule_data_date_not_found():
