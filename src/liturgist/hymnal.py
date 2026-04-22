@@ -12,6 +12,12 @@ from pathlib import Path
 import fitz  # pymupdf
 
 
+def _png_data_uri(png_bytes: bytes) -> str:
+    """Encode raw PNG bytes as a base64 data URI."""
+    b64 = base64.b64encode(png_bytes).decode("ascii")
+    return f"data:image/png;base64,{b64}"
+
+
 def parse_hymn_number(hymn_string: str) -> int | None:
     """Extract hymn number from a string like 'Hymn 552 - Rejoice, All Ye Believers'."""
     match = re.search(r"Hymn\s+(\d+)", hymn_string, re.IGNORECASE)
@@ -27,8 +33,7 @@ def _rasterize_pdf(pdf_path: Path, dpi: int = 300) -> list[str]:
         for page in doc:
             pixmap = page.get_pixmap(dpi=dpi)
             png_bytes = pixmap.tobytes("png")
-            b64 = base64.b64encode(png_bytes).decode("ascii")
-            pages.append(f"data:image/png;base64,{b64}")
+            pages.append(_png_data_uri(png_bytes))
     return pages
 
 
@@ -56,18 +61,14 @@ def load_hymn_images(hymn_number: int, hymnal_dir: Path) -> list[str]:
             page_path = hymnal_dir / f"{hymn_number}-{page_num}.png"
             if not page_path.is_file():
                 break
-            png_bytes = page_path.read_bytes()
-            b64 = base64.b64encode(png_bytes).decode("ascii")
-            pages.append(f"data:image/png;base64,{b64}")
+            pages.append(_png_data_uri(page_path.read_bytes()))
             page_num += 1
         return pages
 
     # 3. Fall back to single PNG
     single_page = hymnal_dir / f"{hymn_number}.png"
     if single_page.is_file():
-        png_bytes = single_page.read_bytes()
-        b64 = base64.b64encode(png_bytes).decode("ascii")
-        return [f"data:image/png;base64,{b64}"]
+        return [_png_data_uri(single_page.read_bytes())]
 
     return []
 
