@@ -40,6 +40,9 @@
       "Bash(tee *)"
     ]
   },
+  "enabledPlugins": {
+    "pyright-lsp@claude-plugins-official": true
+  },
   "env": {
     "PYTHONDONTWRITEBYTECODE": "1"
   }
