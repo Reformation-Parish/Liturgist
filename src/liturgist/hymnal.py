@@ -73,9 +73,7 @@ def load_hymn_images(hymn_number: int, hymnal_dir: Path) -> list[str]:
     return []
 
 
-def load_hymnal_sheets(
-    hymns: str | list[str], hymnal_dir: Path
-) -> list[list[str]]:
+def load_hymnal_sheets(hymns: str | list[str], hymnal_dir: Path) -> list[list[str]]:
     """Load sheet music for a list of hymns.
 
     Args:
