@@ -8,10 +8,9 @@ and converts them to base64 data URIs for embedding in templates.
 import base64
 import re
 from pathlib import Path
-from typing import List, Optional, Union
 
 
-def parse_hymn_number(hymn_string: str) -> Optional[int]:
+def parse_hymn_number(hymn_string: str) -> int | None:
     """Extract hymn number from a string like 'Hymn 552 - Rejoice, All Ye Believers'."""
     match = re.search(r"Hymn\s+(\d+)", hymn_string, re.IGNORECASE)
     if match:
@@ -19,7 +18,7 @@ def parse_hymn_number(hymn_string: str) -> Optional[int]:
     return None
 
 
-def _rasterize_pdf(pdf_path: Path, dpi: int = 300) -> List[str]:
+def _rasterize_pdf(pdf_path: Path, dpi: int = 300) -> list[str]:
     """Rasterize each page of a PDF to a base64 PNG data URI."""
     import fitz  # pymupdf
 
@@ -33,7 +32,7 @@ def _rasterize_pdf(pdf_path: Path, dpi: int = 300) -> List[str]:
     return pages
 
 
-def load_hymn_images(hymn_number: int, hymnal_dir: Path) -> List[str]:
+def load_hymn_images(hymn_number: int, hymnal_dir: Path) -> list[str]:
     """Load images for a hymn number as base64 data URIs.
 
     Checks for files in this order:
@@ -74,8 +73,8 @@ def load_hymn_images(hymn_number: int, hymnal_dir: Path) -> List[str]:
 
 
 def load_hymnal_sheets(
-    hymns: Union[str, List[str]], hymnal_dir: Path
-) -> List[List[str]]:
+    hymns: str | list[str], hymnal_dir: Path
+) -> list[list[str]]:
     """Load sheet music for a list of hymns.
 
     Args:
