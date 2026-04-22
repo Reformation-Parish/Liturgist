@@ -209,6 +209,11 @@ The `EXPANDED_SCRIPTURE_REFS` array is also available, containing the full text 
 liturgist --print-json schedule.xlsx
 ```
 
+### Remove Hymn Sheets and Scripture Expansions
+```bash
+liturgist --print-json schedule.xlsx | jq 'del(.HYMN_SHEETS, .EXPANDED_SCRIPTURE_REFS)'
+```
+
 ### Generate PDF from HTML Template
 ```bash
 liturgist --template bulletin.html schedule.xlsx -o bulletin.pdf
