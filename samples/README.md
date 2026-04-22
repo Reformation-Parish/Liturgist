@@ -3,6 +3,10 @@ Order of worship samples are generated with this command, varying by template.
 % liturgist --date 2025-01-12 --bible-json-path samples/kjv.json --template samples/order-of-worship-flowing.html samples/schedule.csv -o samples/output/order-of-worship-flowing.pdf
 ```
 
+```
+% liturgist --date 2025-01-12 --hymnal-dir samples/hymns --bible-json-path samples/kjv.json --template samples/order-of-worship-sequential.html samples/schedule.csv -o samples/output/order-of-worship-sequential.pdf
+```
+
 ### Google Sheets
 
 After configuring `rclone`, you can download schedule google sheets as an excel spreadsheet
