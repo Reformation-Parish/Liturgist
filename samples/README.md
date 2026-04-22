@@ -1,6 +1,6 @@
-Order of worship is generated with:
+Order of worship samples are generated with this command, varying by template.
 ```
-% liturgist --date 2025-01-12 --bible-json-path samples/kjv.json --template samples/order-of-worship.html samples/schedule.csv
+% liturgist --date 2025-01-12 --bible-json-path samples/kjv.json --template samples/order-of-worship-flowing.html samples/schedule.csv -o samples/output/order-of-worship-flowing.pdf
 ```
 
 ### Google Sheets
