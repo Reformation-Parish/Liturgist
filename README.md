@@ -37,6 +37,7 @@ Options:
   --date TEXT           Date in YYYY-mm-dd format (defaults to next Sunday)
   --print-json          Print data as JSON instead of rendering template
   --bible-json-path     Path to Bible JSON file for scripture text lookup
+  --hymnal-dir          Directory containing hymn sheet music files named by number (e.g., 552.pdf, 552.png, or 552-1.png)
   --template TEXT       Path to Handlebars template file
   -o, --output TEXT     Output file path (default: output/out.pdf)
   --help               Show this message and exit
@@ -200,7 +201,9 @@ The following variables are available in templates:
 - `COLLECT`: Collect prayer
 - `CHURCH_OF_THE_MONTH`: Featured church
 
-The `EXPANDED_SCRIPTURE_REFS` array is also available, containing the full text of each entry in `SCRIPTURE_REFS` provided a `--bible-json-path` file is provided.
+The `EXPANDED_SCRIPTURE_REFS` array is available if `--bible-json-path` is specified and contains the full text of each entry in `SCRIPTURE_REFS`.
+
+The `HYMN_SHEETS` array is available if `--hymnal-dir` is specified and contains arrays of base64 encoded image uris.
 
 ## Examples
 
