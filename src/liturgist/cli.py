@@ -6,7 +6,6 @@ import argparse
 import json
 import sys
 from pathlib import Path
-from typing import Optional
 
 import pandas as pd
 import pypandoc
@@ -60,7 +59,7 @@ def parse_arguments() -> argparse.Namespace:
 
 
 def render_output(
-    rendered_content: str, output_path: str, template_path: Optional[str] = None
+    rendered_content: str, output_path: str, template_path: str | None = None
 ) -> None:
     """
     Render content to the specified output format.
@@ -129,24 +128,15 @@ def main() -> None:
 
     # Process schedule data
     try:
-        data = process_schedule_data(schedule, date, args.bible_json_path)
+        data = process_schedule_data(
+            schedule, date, args.bible_json_path, args.hymnal_dir
+        )
     except ValueError as e:
         print(str(e), file=sys.stderr)
         sys.exit(1)
     except Exception as e:
         print(f"Error processing schedule data: {e}", file=sys.stderr)
         sys.exit(1)
-
-    # Load hymnal sheet music if requested
-    if args.hymnal_dir is not None:
-        hymnal_dir = Path(args.hymnal_dir)
-        if not hymnal_dir.is_dir():
-            print(f"Hymnal directory not found: {hymnal_dir}", file=sys.stderr)
-            sys.exit(1)
-        from .hymnal import load_hymnal_sheets
-
-        hymns = data.get("HYMNS", [])
-        data["HYMN_SHEETS"] = load_hymnal_sheets(hymns, hymnal_dir)
 
     # Output JSON if requested
     if args.print_json:

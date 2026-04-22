@@ -9,6 +9,8 @@ import base64
 import re
 from pathlib import Path
 
+import fitz  # pymupdf
+
 
 def parse_hymn_number(hymn_string: str) -> int | None:
     """Extract hymn number from a string like 'Hymn 552 - Rejoice, All Ye Believers'."""
@@ -20,8 +22,6 @@ def parse_hymn_number(hymn_string: str) -> int | None:
 
 def _rasterize_pdf(pdf_path: Path, dpi: int = 300) -> list[str]:
     """Rasterize each page of a PDF to a base64 PNG data URI."""
-    import fitz  # pymupdf
-
     pages = []
     with fitz.open(pdf_path) as doc:
         for page in doc:
