@@ -10,6 +10,7 @@ from typing import Optional
 
 import pandas as pd
 import pypandoc
+import typst
 from weasyprint import HTML
 
 from .core import (
@@ -55,7 +56,9 @@ def parse_arguments() -> argparse.Namespace:
 
 
 def render_output(
-    rendered_content: str, output_path: str, template_path: Optional[str] = None
+    rendered_content: str,
+    output_path: str,
+    template_path: Optional[Path],
 ) -> None:
     """
     Render content to the specified output format.
@@ -71,26 +74,36 @@ def render_output(
     file_extension = output_path_obj.suffix.lower()
 
     try:
-        if file_extension == ".pdf":
-            HTML(string=rendered_content).write_pdf(output_path)
-        elif file_extension in [".docx", ".odt"]:
-            if template_path:
-                template_file_extension = Path(template_path).suffix.lstrip(".")
+        if template_path.suffix.lower() == ".html":
+            if file_extension == ".pdf":
+                HTML(string=rendered_content).write_pdf(output_path)
+            elif file_extension in [".docx", ".odt"]:
+                if template_path:
+                    template_file_extension = template_path.suffix.lstrip(".")
+                else:
+                    # Default to HTML if no template path provided
+                    template_file_extension = "html"
+
+                pypandoc.convert_text(
+                    rendered_content,
+                    format=template_file_extension,
+                    to=file_extension.lstrip("."),
+                    outputfile=output_path,
+                )
             else:
-                # Default to HTML if no template path provided
-                template_file_extension = "html"
+                # Plain text output
+                output_path_obj.write_text(rendered_content, encoding="utf-8")
 
-            pypandoc.convert_text(
-                rendered_content,
-                format=template_file_extension,
-                to=file_extension.lstrip("."),
-                outputfile=output_path,
-            )
+            print(f"{output_path} generated successfully", file=sys.stderr)
+        elif template_path.suffix.lower() == ".typ" and file_extension == ".pdf":
+            typst.compile(rendered_content.encode("utf-8"), output_path)
+            print(f"{output_path} generated successfully", file=sys.stderr)
         else:
-            # Plain text output
-            output_path_obj.write_text(rendered_content, encoding="utf-8")
+            print(
+                f"Unable to generate {output_path} from {template_path}",
+                file=sys.stderr,
+            )
 
-        print(f"{output_path} generated successfully", file=sys.stderr)
     except Exception as e:
         print(f"Error generating output: {e}", file=sys.stderr)
         sys.exit(1)
@@ -146,7 +159,7 @@ def main() -> None:
         try:
             template = load_template_from_file(template_path)
             rendered_content = template(data)
-            render_output(rendered_content, args.output_path, str(template_path))
+            render_output(rendered_content, args.output_path, template_path)
         except Exception as e:
             print(f"Error rendering template: {e}", file=sys.stderr)
             sys.exit(1)
