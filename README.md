@@ -212,9 +212,14 @@ The `HYMN_SCORES` array is available if `--hymnal-dir` is specified. Each entry 
 liturgist --print-json schedule.xlsx
 ```
 
+### Truncate Encoded Hymn Sheet Images
+```bash
+liturgist --bible-json-path bible.json --hymnal-dir hymns  --print-json schedule.xlsx | jq '.HYMN_SCORES |= map(if . != null then .sheets |= map(.[0:30] + "...") else . end)'
+```
+
 ### Remove Hymn Scores and Scripture Expansions
 ```bash
-liturgist --print-json schedule.xlsx | jq 'del(.HYMN_SCORES, .EXPANDED_SCRIPTURE_REFS)'
+liturgist --bible-json-path bible.json --hymnal-dir hymns --print-json schedule.xlsx | jq 'del(.HYMN_SCORES, .EXPANDED_SCRIPTURE_REFS)'
 ```
 
 ### Generate PDF from HTML Template
