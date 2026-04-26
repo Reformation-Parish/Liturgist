@@ -130,10 +130,10 @@
 
         <h2>PRAYER</h2>
         <p>{{HYMNS.0}}</p>
-        {{#if HYMN_SHEETS}}
-        {{#each HYMN_SHEETS.0}}
-        <img src="{{this}}" class="sheet-music" />
-        {{/each}}
+        {{#if HYMN_SCORES.[0] }}
+            {{#each HYMN_SCORES.[0].sheets}}
+            <img src="{{this}}" class="sheet-music" />
+            {{/each}}
         {{/if}}
 
         {{#if BAPTISMS}}
@@ -156,8 +156,8 @@
         <h1>- Confession of Sin -</h1>
         <p>Exhortation</p>
         <p>{{HYMNS.1}}</p>
-        {{#if HYMN_SHEETS}}
-        {{#each HYMN_SHEETS.1}}
+        {{#if HYMN_SCORES}}
+        {{#each HYMN_SCORES.1.sheets}}
         <img src="{{this}}" class="sheet-music" />
         {{/each}}
         {{/if}}
@@ -193,8 +193,8 @@
         <p><b>{{CATECHISM_ANSWER}}</b></p>
 
         <p class="extra-margin-top">{{HYMNS.2}}</p>
-        {{#if HYMN_SHEETS}}
-        {{#each HYMN_SHEETS.2}}
+        {{#if HYMN_SCORES}}
+        {{#each HYMN_SCORES.2.sheets}}
         <img src="{{this}}" class="sheet-music" />
         {{/each}}
         {{/if}}
@@ -221,8 +221,8 @@
         </p>
         <br>
         <p>{{HYMNS.3}}</p>
-        {{#if HYMN_SHEETS}}
-        {{#each HYMN_SHEETS.3}}
+        {{#if HYMN_SCORES}}
+        {{#each HYMN_SCORES.3.sheets}}
         <img src="{{this}}" class="sheet-music" />
         {{/each}}
         {{/if}}
@@ -232,8 +232,8 @@
 
         <h2>OFFERING</h2>
         <p>{{HYMNS.4}}</p>
-        {{#if HYMN_SHEETS}}
-        {{#each HYMN_SHEETS.4}}
+        {{#if HYMN_SCORES}}
+        {{#each HYMN_SCORES.4.sheets}}
         <img src="{{this}}" class="sheet-music" />
         {{/each}}
         {{/if}}
@@ -241,22 +241,22 @@
         <h1>- Communion -</h1>
         <h2>THE BREAD</h2>
         <p>{{HYMNS.5}}</p>
-        {{#if HYMN_SHEETS}}
-        {{#each HYMN_SHEETS.5}}
+        {{#if HYMN_SCORES}}
+        {{#each HYMN_SCORES.5.sheets}}
         <img src="{{this}}" class="sheet-music" />
         {{/each}}
         {{/if}}
         <h2>THE WINE</h2>
         <p>{{HYMNS.6}}</p>
-        {{#if HYMN_SHEETS}}
-        {{#each HYMN_SHEETS.6}}
+        {{#if HYMN_SCORES}}
+        {{#each HYMN_SCORES.6.sheets}}
         <img src="{{this}}" class="sheet-music" />
         {{/each}}
         {{/if}}
         <h2>DOXOLOGY</h2>
         <p>{{HYMNS.7}}</p>
-        {{#if HYMN_SHEETS}}
-        {{#each HYMN_SHEETS.7}}
+        {{#if HYMN_SCORES}}
+        {{#each HYMN_SCORES.7.sheets}}
         <img src="{{this}}" class="sheet-music" />
         {{/each}}
         {{/if}}

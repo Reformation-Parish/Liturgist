@@ -5,7 +5,7 @@ from pathlib import Path
 
 import fitz  # pymupdf
 
-from liturgist.hymnal import load_hymn_images, load_hymnal_sheets, parse_hymn_number
+from liturgist.hymnal import load_hymn_images, load_hymnal_scores, parse_hymn_number
 
 # Minimal valid 1x1 white PNG
 TINY_PNG = (
@@ -108,28 +108,30 @@ class TestLoadHymnImages:
         assert len(result) == 1  # PDF has 1 page, PNGs would give 2
 
 
-class TestLoadHymnalSheets:
+class TestLoadHymnalScores:
     def test_list_input(self, tmp_path):
         (tmp_path / "552.png").write_bytes(TINY_PNG)
         hymns = [
             "Hymn 552 - Rejoice, All Ye Believers",
             "Hymn 999 - Does Not Exist",
         ]
-        result = load_hymnal_sheets(hymns, tmp_path)
+        result = load_hymnal_scores(hymns, tmp_path)
         assert len(result) == 2
-        assert len(result[0]) == 1
-        assert result[1] == []
+        assert result[0]["number"] == 552
+        assert len(result[0]["sheets"]) == 1
+        assert result[1] is None
 
     def test_string_input(self, tmp_path):
         (tmp_path / "100.png").write_bytes(TINY_PNG)
-        result = load_hymnal_sheets("Hymn 100 - A Title", tmp_path)
+        result = load_hymnal_scores("Hymn 100 - A Title", tmp_path)
         assert len(result) == 1
-        assert len(result[0]) == 1
+        assert result[0]["number"] == 100
+        assert len(result[0]["sheets"]) == 1
 
     def test_no_hymn_number(self, tmp_path):
-        result = load_hymnal_sheets("Doxology", tmp_path)
-        assert result == [[]]
+        result = load_hymnal_scores("Doxology", tmp_path)
+        assert result == [None]
 
     def test_empty_list(self, tmp_path):
-        result = load_hymnal_sheets([], tmp_path)
+        result = load_hymnal_scores([], tmp_path)
         assert result == []

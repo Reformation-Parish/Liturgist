@@ -12,7 +12,7 @@ from typing import Any
 import pandas as pd
 from pybars import Compiler
 
-from .hymnal import load_hymnal_sheets
+from .hymnal import load_hymnal_scores
 
 hymn_csv_keys = [f"Hymn {i}" for i in range(1, 50)]
 scripture_csv_keys = [f"Scripture {i}" for i in range(1, 50)]
@@ -268,11 +268,11 @@ def process_schedule_data(
                     for ref in scriptures
                 ]
 
-    # Load hymnal sheet music if provided
+    # Load hymnal scores if provided
     if hymnal_dir is not None:
         hymnal_path = Path(hymnal_dir)
         if hymnal_path.is_dir():
             hymns = data.get("HYMNS", [])
-            data["HYMN_SHEETS"] = load_hymnal_sheets(hymns, hymnal_path)
+            data["HYMN_SCORES"] = load_hymnal_scores(hymns, hymnal_path)
 
     return data

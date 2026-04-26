@@ -133,8 +133,8 @@
 
         <h2>PRAYER</h2>
         <p>{{HYMNS.0}}</p>
-        {{#if HYMN_SHEETS}}
-        {{#each HYMN_SHEETS.0}}
+        {{#if HYMN_SCORES}}
+        {{#each HYMN_SCORES.0.sheets}}
         <img src="{{this}}" class="sheet-music" />
         {{/each}}
         {{/if}}

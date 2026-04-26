@@ -203,7 +203,7 @@ The following variables are available in templates:
 
 The `EXPANDED_SCRIPTURE_REFS` array is available if `--bible-json-path` is specified and contains the full text of each entry in `SCRIPTURE_REFS`.
 
-The `HYMN_SHEETS` array is available if `--hymnal-dir` is specified and contains arrays of base64 encoded image uris.
+The `HYMN_SCORES` array is available if `--hymnal-dir` is specified. Each entry is either `null` (no parseable hymn number, or no matching files) or an object with `number` (the hymn number) and `sheets` (an array of base64 encoded image uris, one per sheet).
 
 ## Examples
 
@@ -212,9 +212,9 @@ The `HYMN_SHEETS` array is available if `--hymnal-dir` is specified and contains
 liturgist --print-json schedule.xlsx
 ```
 
-### Remove Hymn Sheets and Scripture Expansions
+### Remove Hymn Scores and Scripture Expansions
 ```bash
-liturgist --print-json schedule.xlsx | jq 'del(.HYMN_SHEETS, .EXPANDED_SCRIPTURE_REFS)'
+liturgist --print-json schedule.xlsx | jq 'del(.HYMN_SCORES, .EXPANDED_SCRIPTURE_REFS)'
 ```
 
 ### Generate PDF from HTML Template

@@ -1,8 +1,9 @@
 """
-Hymnal sheet music loading for liturgist.
+Hymnal score loading for liturgist.
 
-Loads hymn sheet music from a directory of PDFs or PNGs indexed by hymn number
-and converts them to base64 data URIs for embedding in templates.
+Loads hymn scores from a directory of PDFs or PNGs indexed by hymn number
+and converts them to base64 data URIs for embedding in templates. Each score
+is a list of sheets (one per page).
 """
 
 import base64
@@ -73,8 +74,8 @@ def load_hymn_images(hymn_number: int, hymnal_dir: Path) -> list[str]:
     return []
 
 
-def load_hymnal_sheets(hymns: str | list[str], hymnal_dir: Path) -> list[list[str]]:
-    """Load sheet music for a list of hymns.
+def load_hymnal_scores(hymns: str | list[str], hymnal_dir: Path) -> list[dict | None]:
+    """Load scores for a list of hymns.
 
     Args:
         hymns: Single hymn string or list of hymn strings
@@ -82,17 +83,22 @@ def load_hymnal_sheets(hymns: str | list[str], hymnal_dir: Path) -> list[list[st
         hymnal_dir: Directory containing PDFs or PNGs named by hymn number
 
     Returns:
-        List parallel to hymns, each entry a list of base64 data URIs.
-        Empty list for hymns with no matching files.
+        List parallel to hymns. Each entry is either ``None`` (no parseable
+        hymn number, or no matching files) or a dict ``{"number": int,
+        "sheets": list[str]}`` where each sheet is a base64 data URI.
     """
     if isinstance(hymns, str):
         hymns = [hymns]
 
-    sheets = []
+    scores = []
     for hymn_str in hymns:
         number = parse_hymn_number(hymn_str)
-        if number is not None:
-            sheets.append(load_hymn_images(number, hymnal_dir))
+        if number is None:
+            scores.append(None)
+            continue
+        sheets = load_hymn_images(number, hymnal_dir)
+        if sheets:
+            scores.append({"number": number, "sheets": sheets})
         else:
-            sheets.append([])
-    return sheets
+            scores.append(None)
+    return scores
