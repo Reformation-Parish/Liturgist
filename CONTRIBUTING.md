@@ -13,7 +13,7 @@ Thank you for your interest in contributing to Liturgist! This document provides
 
 1. **Clone the repository**:
    ```bash
-   git clone git@github.com:Trinity-Reformed-Church-GA/Liturgist.git
+   git clone git@github.com:Reformation-Parish/Liturgist.git
    cd liturgist
    ```
 

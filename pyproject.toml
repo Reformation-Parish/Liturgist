@@ -57,9 +57,9 @@ docs = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/Trinity-Reformed-Church-GA/Liturgist"
-"Bug Reports" = "https://github.com/Trinity-Reformed-Church-GA/Liturgist/issues"
-"Source" = "https://github.com/Trinity-Reformed-Church-GA/Liturgist"
+"Homepage" = "https://github.com/Reformation-Parish/Liturgist"
+"Bug Reports" = "https://github.com/Reformation-Parish/Liturgist/issues"
+"Source" = "https://github.com/Reformation-Parish/Liturgist"
 
 [project.scripts]
 liturgist = "liturgist.cli:main"

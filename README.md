@@ -5,7 +5,7 @@ A liturgical document generator
 
 ### Install from Source
 ```sh
-git clone git@github.com:jzbrooks/Liturgist.git
+git clone git@github.com:Reformation-Parish/Liturgist.git
 cd Liturgist
 pip install .
 ```
@@ -13,7 +13,7 @@ pip install .
 ### Development Installation
 For development, install with development dependencies:
 ```sh
-git clone git@github.com:jzbrooks/Liturgist.git
+git clone git@github.com:Reformation-Parish/Liturgist.git
 cd Liturgist
 pip install -e ".[dev]"
 ```
