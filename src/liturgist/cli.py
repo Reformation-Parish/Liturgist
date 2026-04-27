@@ -6,7 +6,6 @@ import argparse
 import json
 import sys
 from pathlib import Path
-from typing import Optional
 
 import pandas as pd
 import pypandoc
@@ -48,6 +47,11 @@ def parse_arguments() -> argparse.Namespace:
         default="output/out.pdf",
     )
     parser.add_argument(
+        "--hymnal-dir",
+        dest="hymnal_dir",
+        help="Directory containing hymn sheet music files named by number (e.g., 552.pdf, 552.png, or 552-1.png)",
+    )
+    parser.add_argument(
         "schedule", help="A path to a schedule - csv, ods, xlsx, and json are supported"
     )
 
@@ -55,7 +59,7 @@ def parse_arguments() -> argparse.Namespace:
 
 
 def render_output(
-    rendered_content: str, output_path: str, template_path: Optional[str] = None
+    rendered_content: str, output_path: str, template_path: str | None = None
 ) -> None:
     """
     Render content to the specified output format.
@@ -124,7 +128,9 @@ def main() -> None:
 
     # Process schedule data
     try:
-        data = process_schedule_data(schedule, date, args.bible_json_path)
+        data = process_schedule_data(
+            schedule, date, args.bible_json_path, args.hymnal_dir
+        )
     except ValueError as e:
         print(str(e), file=sys.stderr)
         sys.exit(1)

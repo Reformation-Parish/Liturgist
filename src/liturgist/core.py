@@ -7,10 +7,12 @@ import re
 import sys
 from datetime import date, datetime, timedelta
 from pathlib import Path
-from typing import Any, Union
+from typing import Any
 
 import pandas as pd
 from pybars import Compiler
+
+from .hymnal import load_hymnal_scores
 
 hymn_csv_keys = [f"Hymn {i}" for i in range(1, 50)]
 scripture_csv_keys = [f"Scripture {i}" for i in range(1, 50)]
@@ -41,7 +43,7 @@ def next_sunday() -> datetime:
     return next_sunday.date()
 
 
-def read_schedule(schedule_path: Union[str, Path]) -> pd.DataFrame:
+def read_schedule(schedule_path: str | Path) -> pd.DataFrame:
     """
     Read a schedule file (CSV, ODS, XLSX, or XLS) and return as DataFrame.
 
@@ -67,7 +69,7 @@ def read_schedule(schedule_path: Union[str, Path]) -> pd.DataFrame:
         raise ValueError(f"Unexpected schedule file type: {file_extension}")
 
 
-def load_template_from_file(template_path: Union[str, Path]) -> Any:
+def load_template_from_file(template_path: str | Path) -> Any:
     """
     Load and compile a Handlebars template from file.
 
@@ -180,7 +182,8 @@ def _find_column(csv_key: str, columns: pd.Index) -> str | None:
 def process_schedule_data(
     schedule: pd.DataFrame,
     date: date,
-    bible_json_path: Union[str, Path, None] = None,
+    bible_json_path: str | Path | None = None,
+    hymnal_dir: str | Path | None = None,
 ) -> dict[str, Any]:
     """
     Process schedule data for a specific date and return template data.
@@ -189,6 +192,7 @@ def process_schedule_data(
         schedule: DataFrame containing schedule data
         date: Date to extract data for
         bible_json_path: Optional path to bible JSON file for scripture text
+        hymnal_dir: Optional path to directory containing hymn sheet music files
 
     Returns:
         Dictionary of processed data for template rendering
@@ -263,5 +267,12 @@ def process_schedule_data(
                     get_scripture_text(bible_data, ref) if ref is not None else None
                     for ref in scriptures
                 ]
+
+    # Load hymnal scores if provided
+    if hymnal_dir is not None:
+        hymnal_path = Path(hymnal_dir)
+        if hymnal_path.is_dir():
+            hymns = data.get("HYMNS", [])
+            data["HYMN_SCORES"] = load_hymnal_scores(hymns, hymnal_path)
 
     return data

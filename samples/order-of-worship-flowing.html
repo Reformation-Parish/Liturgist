@@ -11,8 +11,8 @@
         @media print {
 
             @page {
-               margin: 20px;
-               size: landscape letter;
+               margin: 0.75in;
+               size: letter;
 
            }
 
@@ -57,15 +57,12 @@
         }
 
         .flow-text {
-            column-count: 2;
-            column-gap: 30px;
-            column-fill: auto;
         }
 
         .footer {
             position: absolute;
             bottom: 0.15in;
-            width: 5in;
+            width: 100%;
         }
 
         .footer p {
@@ -106,6 +103,13 @@
         .title-page > p:first-of-type {
             padding-top: 2em;
         }
+
+        .sheet-music {
+            width: 100%;
+            max-width: 100%;
+            page-break-inside: avoid;
+            margin: 0.5em 0;
+        }
     }
 </style>
 <title>TRC Order of Worship</title>
@@ -129,6 +133,11 @@
 
         <h2>PRAYER</h2>
         <p>{{HYMNS.0}}</p>
+        {{#if HYMN_SCORES}}
+        {{#each HYMN_SCORES.0.sheets}}
+        <img src="{{this}}" class="sheet-music" />
+        {{/each}}
+        {{/if}}
 
         {{#if BAPTISMS}}
         <h2>HOUSEHOLD BAPTISM</h2>
@@ -180,7 +189,7 @@
         <h2>CATECHISM</h2>
         <p>{{CATECHISM_QUESTION}}</p>
         <p><b>{{CATECHISM_ANSWER}}</b></p>
-        <p>{{SCRIPTURE_REFS.10}}</p>
+
         <p class="extra-margin-top">{{HYMNS.2}}</p>
 
         <h1>- Consecration -</h1>

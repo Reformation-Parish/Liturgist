@@ -5,3 +5,6 @@ __pycache__/
 .ruff_cache/
 
 output/
+!samples/output/
+
+.claude/settings.local.json

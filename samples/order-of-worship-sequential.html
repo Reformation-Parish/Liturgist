@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <link
+    href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Vollkorn:ital,wght@0,400..900;1,400..900&display=swap"
+    rel="stylesheet"
+    />
+    <style>
+
+        @media print {
+
+            @page {
+               margin: 0.75in;
+               size: letter;
+           }
+
+           h1 {
+            margin: auto inherit;
+            text-align: center;
+            font-family: Vollkorn;
+            font-size: 20px;
+        }
+
+        h2 {
+            font-family: "Open Sans";
+            font-size: 16px;
+            font-weight: normal;
+            margin-bottom: 0.25em;
+            text-transform: uppercase;
+        }
+
+        p {
+            font-family: "Open Sans";
+            font-size: 14px;
+            padding: 0;
+            margin: 0;
+        }
+
+        .pagebreak {
+            page-break-before: always;
+        }
+
+        .extra-margin-top {
+            margin-top: 0.5em;
+        }
+
+        .flow-text h1 {
+            margin-top: 0.5em;
+        }
+
+        .instruction {
+            font-size: 8px;
+            font-style: italic;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 0.15in;
+            width: 100%;
+        }
+
+        .footer p {
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .title-page {
+            justify-content: center;
+            text-align: center;
+        }
+
+        .title-page h1 {
+            margin: 0;
+            padding: 0.5in 0 0;
+            font-size: 26px;
+        }
+
+        .title-page h2 {
+            margin-top: 0;
+            padding-top: 0;
+            font-size: 12px;
+            text-transform: none;
+        }
+
+        .title-page p {
+            padding: inherit 7%;
+        }
+
+        .title-page > p:first-of-type {
+            padding-top: 2em;
+        }
+
+        .sheet-music {
+            width: 100%;
+            max-width: 100%;
+            page-break-inside: avoid;
+            margin: 0.5em 0;
+        }
+    }
+</style>
+<title>TRC Order of Worship</title>
+</head>
+
+<body>
+    <div class="title-page">
+        <h1>Order of Worship</h1>
+        <h2>{{FORMATTED_DATE}}</h2>
+        {{#if COLLECT}}
+        <p>{{COLLECT}}</p>
+        {{/if}}
+    </div>
+
+    <div class="pagebreak"> </div>
+
+    <div class="flow-text">
+        <h1>- Call to Worship -</h1>
+
+        <h2>ADORATION</h2>
+        <p>
+            Leader: Grace, mercy, and peace to you, from God the Father,
+            Son, and Holy Spirit.
+        </p>
+        <p>Congregation: <b>And also to you.</b></p>
+
+        <h2>SCRIPTURE</h2>
+        <p>{{SCRIPTURE_REFS.0}}</p>
+        <p>Leader: Lift Up your Hearts!</p>
+        <p>Congregation: <b>We Lift them up to the Lord!</b></p>
+
+        <h2>PRAYER</h2>
+        <p>{{HYMNS.0}}</p>
+        {{#if HYMN_SCORES.[0] }}
+            {{#each HYMN_SCORES.[0].sheets}}
+            <img src="{{this}}" class="sheet-music" />
+            {{/each}}
+        {{/if}}
+
+        {{#if BAPTISMS}}
+        <h2>HOUSEHOLD BAPTISM</h2>
+        <p>{{BAPTISMS}}</p>
+        <p>
+            Congregational charge:
+            <b>
+                Little child, for you Jesus Christ came to this earth,
+                struggled and suffered; for your sake He crossed Gethsemane
+                and went through the darkness of Calvary; for your sake He
+                cried: 'It is finished'; for your sake He died and for your
+                sake He overcame death; indeed for your sake, little child,
+                and you still know nothing of it. And thus the word of the
+                apostle is confirmed: "We love God, for He loved us first."
+            </b>
+        </p>
+        {{/if}}
+
+        <h1>- Confession of Sin -</h1>
+        <p>Exhortation</p>
+        <p>{{HYMNS.1}}</p>
+        {{#if HYMN_SCORES}}
+        {{#each HYMN_SCORES.1.sheets}}
+        <img src="{{this}}" class="sheet-music" />
+        {{/each}}
+        {{/if}}
+        <p class="instruction extra-margin-top">
+            [Congregation is invited to kneel if able.]
+        </p>
+        <br>
+        <p>Prayer of Confession – {{SCRIPTURE_REFS.1}}</p>
+        <p>Assurance of Pardon - {{SCRIPTURE_REFS.2}}</p>
+
+        <p class="extra-margin-top">Leader: Your sins are forgiven through Christ</p>
+        <p>Congregation: <b>Thanks be to God!</b></p>
+
+        <h2>CONFESSION OF FAITH – Apostles Creed</h2>
+        <p>
+            <b>
+                I believe in God the Father Almighty; Maker of heaven and
+                earth. And in Jesus Christ, His only Son, our Lord; who was
+                conceived by the Holy Ghost and born of the virgin, Mary;
+                suffered under Pontius Pilate, was crucified, dead, and
+                buried; He descended into Hades; the third day He rose from
+                the dead; He ascended into Heaven and sits at the right hand
+                of God the Father Almighty; from thence He shall come to
+                judge the living and the dead. I believe in the Holy Ghost;
+                the holy catholic Church; the communion of saints; the
+                forgiveness of sins; the resurrection of the body; and the
+                life everlasting. Amen.
+            </b>
+        </p>
+
+        <h2>CATECHISM</h2>
+        <p>{{CATECHISM_QUESTION}}</p>
+        <p><b>{{CATECHISM_ANSWER}}</b></p>
+
+        <p class="extra-margin-top">{{HYMNS.2}}</p>
+        {{#if HYMN_SCORES}}
+        {{#each HYMN_SCORES.2.sheets}}
+        <img src="{{this}}" class="sheet-music" />
+        {{/each}}
+        {{/if}}
+
+        <h1>- Consecration -</h1>
+
+        <h2>SCRIPTURE READING</h2>
+        <p>{{SCRIPTURE_REFS.3}}, {{SCRIPTURE_REFS.4}}</p>
+        <p>Reader: The Word of the Lord</p>
+        <p>Congregation: <b>Thanks be to God!</b></p>
+
+        <h2>CORPORATE PRAYER</h2>
+
+        <h2>The Lord's Prayer</h2>
+        <p>
+            <b>
+                Our Father, who art in heaven, hallowed be thy name, thy
+                kingdom come, thy will be done, on earth as it is in heaven.
+                Give us this day our daily bread. And forgive us our debts,
+                as we forgive our debtors. And lead us not into temptation,
+                but deliver us from evil. For thine is the kingdom, and the
+                power, and the glory, forever. Amen.
+            </b>
+        </p>
+        <br>
+        <p>{{HYMNS.3}}</p>
+        {{#if HYMN_SCORES}}
+        {{#each HYMN_SCORES.3.sheets}}
+        <img src="{{this}}" class="sheet-music" />
+        {{/each}}
+        {{/if}}
+
+        <h2>SERMON</h2>
+        <p>{{SCRIPTURE_REFS.8}}</p>
+
+        <h2>OFFERING</h2>
+        <p>{{HYMNS.4}}</p>
+        {{#if HYMN_SCORES}}
+        {{#each HYMN_SCORES.4.sheets}}
+        <img src="{{this}}" class="sheet-music" />
+        {{/each}}
+        {{/if}}
+
+        <h1>- Communion -</h1>
+        <h2>THE BREAD</h2>
+        <p>{{HYMNS.5}}</p>
+        {{#if HYMN_SCORES}}
+        {{#each HYMN_SCORES.5.sheets}}
+        <img src="{{this}}" class="sheet-music" />
+        {{/each}}
+        {{/if}}
+        <h2>THE WINE</h2>
+        <p>{{HYMNS.6}}</p>
+        {{#if HYMN_SCORES}}
+        {{#each HYMN_SCORES.6.sheets}}
+        <img src="{{this}}" class="sheet-music" />
+        {{/each}}
+        {{/if}}
+        <h2>DOXOLOGY</h2>
+        <p>{{HYMNS.7}}</p>
+        {{#if HYMN_SCORES}}
+        {{#each HYMN_SCORES.7.sheets}}
+        <img src="{{this}}" class="sheet-music" />
+        {{/each}}
+        {{/if}}
+
+        <h1>- Commissioning -</h1>
+        <h2>CHARGE &amp; BENEDICTION</h2>
+        {{#if EXPANDED_SCRIPTURE_REFS.9}}
+        <p>{{EXPANDED_SCRIPTURE_REFS.9}}</p>
+        {{/if}}
+
+        {{#if SCRIPTURE_REFS.9}}
+        <p class="extra-margin-top">{{SCRIPTURE_REFS.9}}</p>
+        {{/if}}
+
+        <div class="footer">
+            <hr>
+
+            <p>
+                Tithes and Offerings are not regularly collected during our worship service.
+                If you would like to make a contribution that will help advance the Kingdom of God in Newnan,
+                you may do so using the donation box on the back table.
+            </p>
+        </div>
+    </div>
+</body>
+</html>
