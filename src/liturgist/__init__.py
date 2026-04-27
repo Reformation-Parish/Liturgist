@@ -11,7 +11,6 @@ __email__ = "justin@jzbrooks.com"
 
 # Re-export main functionality for convenience
 from .core import (
-    get_scripture_text,
     load_template_from_file,
     next_sunday,
     read_schedule,
@@ -20,6 +19,7 @@ from .hymnal import (
     load_hymnal_scores,
     parse_hymn_number,
 )
+from .scripture import get_scripture_text
 
 __all__ = [
     "read_schedule",
