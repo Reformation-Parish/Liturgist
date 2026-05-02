@@ -139,9 +139,9 @@
         {{/each}}
         {{/if}}
 
-        {{#if BAPTISMS}}
+        {{#if EXTRAS.[3]}}
         <h2>HOUSEHOLD BAPTISM</h2>
-        <p>{{BAPTISMS}}</p>
+        <p>{{EXTRAS.[3]}}</p>
         <p>
             Congregational charge:
             <b>
@@ -187,8 +187,8 @@
         </p>
 
         <h2>CATECHISM</h2>
-        <p>{{CATECHISM_QUESTION}}</p>
-        <p><b>{{CATECHISM_ANSWER}}</b></p>
+        <p>{{EXTRAS.[1]}}</p>
+        <p><b>{{EXTRAS.[2]}}</b></p>
 
         <p class="extra-margin-top">{{HYMNS.2}}</p>
 
@@ -201,7 +201,7 @@
 
         <h2>CORPORATE PRAYER</h2>
 
-        {{#if BAPTISMS}}
+        {{#if EXTRAS.[3]}}
         <!-- Final Page -->
         <div class="pagebreak"> </div>
         <h2>The Lord’s Prayer</h2>

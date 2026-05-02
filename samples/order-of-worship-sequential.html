@@ -106,8 +106,8 @@
     <div class="title-page">
         <h1>Order of Worship</h1>
         <h2>{{FORMATTED_DATE}}</h2>
-        {{#if COLLECT}}
-        <p>{{COLLECT}}</p>
+        {{#if EXTRAS.[0]}}
+        <p>{{EXTRAS.[0]}}</p>
         {{/if}}
     </div>
 
@@ -136,9 +136,9 @@
             {{/each}}
         {{/if}}
 
-        {{#if BAPTISMS}}
+        {{#if EXTRAS.[3]}}
         <h2>HOUSEHOLD BAPTISM</h2>
-        <p>{{BAPTISMS}}</p>
+        <p>{{EXTRAS.[3]}}</p>
         <p>
             Congregational charge:
             <b>
@@ -189,8 +189,8 @@
         </p>
 
         <h2>CATECHISM</h2>
-        <p>{{CATECHISM_QUESTION}}</p>
-        <p><b>{{CATECHISM_ANSWER}}</b></p>
+        <p>{{EXTRAS.[1]}}</p>
+        <p><b>{{EXTRAS.[2]}}</b></p>
 
         <p class="extra-margin-top">{{HYMNS.2}}</p>
         {{#if HYMN_SCORES}}

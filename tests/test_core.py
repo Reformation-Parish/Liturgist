@@ -75,8 +75,8 @@ def test_process_schedule_data():
         "Date": ["2024-02-18"],
         "Hymn 1": ["Hymn 290 - Hallelujah, Praise Jehovah"],
         "Scripture 1": ["Acts 2:34-35"],
-        "Question": ["Q50. What is required in the second commandment?"],
-        "Answer": [
+        "Extra 1 - Question": ["Q50. What is required in the second commandment?"],
+        "Extra 2 - Answer": [
             "A. The second commandment requireth the receiving, observing, and keeping pure and entire, all such religious worship and ordinances as God hath appointed in his Word."
         ],
     }
@@ -89,14 +89,10 @@ def test_process_schedule_data():
     assert result["FORMATTED_DATE"] == "Sunday, February 18, 2024"
     assert result["HYMNS"] == ["Hymn 290 - Hallelujah, Praise Jehovah"]
     assert result["SCRIPTURE_REFS"] == ["Acts 2:34-35"]
-    assert (
-        result["CATECHISM_QUESTION"]
-        == "Q50. What is required in the second commandment?"
-    )
-    assert (
-        result["CATECHISM_ANSWER"]
-        == "A. The second commandment requireth the receiving, observing, and keeping pure and entire, all such religious worship and ordinances as God hath appointed in his Word."
-    )
+    assert result["EXTRAS"] == [
+        "Q50. What is required in the second commandment?",
+        "A. The second commandment requireth the receiving, observing, and keeping pure and entire, all such religious worship and ordinances as God hath appointed in his Word.",
+    ]
 
 
 def test_scripture_array_from_numbered_columns():
@@ -174,6 +170,25 @@ def test_hymn_heading_prefix_match():
     result = process_schedule_data(schedule, date)
 
     assert result["HYMNS"] == ["Hymn 290 - Hallelujah", "Hymn 620 - Stricken"]
+
+
+def test_extras_array_with_descriptive_headings():
+    """Test that 'Extra N - <label>' columns build the EXTRAS array."""
+    data = {
+        "Date": ["2024-02-18"],
+        "Extra 1 - Collect": ["O God, who..."],
+        "Extra 2 - Question": ["Q50. What is required..."],
+        "Extra 3 - Answer": ["A. The second commandment..."],
+    }
+    schedule = pd.DataFrame(data)
+    date = pd.to_datetime("2024-02-18").date()
+    result = process_schedule_data(schedule, date)
+
+    assert result["EXTRAS"] == [
+        "O God, who...",
+        "Q50. What is required...",
+        "A. The second commandment...",
+    ]
 
 
 def test_array_preserves_gaps_as_none():

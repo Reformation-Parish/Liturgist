@@ -68,8 +68,10 @@ Example output:
     "Acts 2:36-37",
     "Acts 5:30-31"
   ],
-  "CATECHISM_QUESTION": "Q51. What is forbidden in the second commandment?", 
-  "CATECHISM_ANSWER": "A. The second commandment forbiddeth the worshipping of God by images, or any other way not appointed in his Word."
+  "EXTRAS": [
+    "Q51. What is forbidden in the second commandment?",
+    "A. The second commandment forbiddeth the worshipping of God by images, or any other way not appointed in his Word."
+  ]
 }
 ```
 
@@ -94,9 +96,11 @@ liturgist --print-json liturgy.ods | jq
     "Deuteronomy 10:12-22",
     "Philippians 2:12-18"
   ],
-  "CATECHISM_QUESTION": "Q50. What is required in the second commandment?",
-  "CATECHISM_ANSWER": "A. The second commandment requireth the receiving, observing, and keeping pure and entire, all such religious worship and ordinances as God hath appointed in his Word.",
-  "BAPTISMS": "Ginger Rogers"
+  "EXTRAS": [
+    "Q50. What is required in the second commandment?",
+    "A. The second commandment requireth the receiving, observing, and keeping pure and entire, all such religious worship and ordinances as God hath appointed in his Word.",
+    "Ginger Rogers"
+  ]
 }
 ```
 
@@ -185,7 +189,7 @@ liturgist ./liturgy.ods --template ./officiant-order-of-worship.md -o ./output/o
 
 ## Schedule Columns
 
-Schedule columns named `Hymn N` and `Scripture N` (where N is 1-49) are collected into the `HYMNS` and `SCRIPTURE_REFS` arrays respectively. Columns may include descriptive suffixes (e.g., `Scripture 1 - Call to Worship`) and will still be matched. Gaps in numbering are preserved as `null` in the arrays.
+Schedule columns named `Hymn N`, `Scripture N`, and `Extra N` (where N is 1-49) are collected into the `HYMNS`, `SCRIPTURE_REFS`, and `EXTRAS` arrays respectively. Columns may include descriptive suffixes (e.g., `Scripture 1 - Call to Worship`, `Extra 1 - Collect`) and will still be matched. Gaps in numbering are preserved as `null` in the arrays.
 
 ## Template Variables
 
@@ -195,11 +199,7 @@ The following variables are available in templates:
 - `FORMATTED_DATE`: Human-readable date (e.g., "Sunday, February 18, 2024")
 - `HYMNS`: Array of hymn titles (from `Hymn 1`, `Hymn 2`, ... columns)
 - `SCRIPTURE_REFS`: Array of scripture references (from `Scripture 1`, `Scripture 2`, ... columns)
-- `CATECHISM_QUESTION`: Catechism question
-- `CATECHISM_ANSWER`: Catechism answer
-- `BAPTISMS`: Baptism information
-- `COLLECT`: Collect prayer
-- `CHURCH_OF_THE_MONTH`: Featured church
+- `EXTRAS`: Array of arbitrary strings (from `Extra 1`, `Extra 2`, ... columns) for content like collects, catechism, baptism announcements, etc.
 
 The `EXPANDED_SCRIPTURE_REFS` array is available if `--bible-json-path` is specified and contains the full text of each entry in `SCRIPTURE_REFS`.
 
