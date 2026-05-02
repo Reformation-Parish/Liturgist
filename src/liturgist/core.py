@@ -15,15 +15,12 @@ from .scripture import get_scripture_text
 
 hymn_csv_keys = [f"Hymn {i}" for i in range(1, 50)]
 scripture_csv_keys = [f"Scripture {i}" for i in range(1, 50)]
+extra_csv_keys = [f"Extra {i}" for i in range(1, 50)]
 
 csv_key_to_template_key = {
     **dict.fromkeys(hymn_csv_keys, "HYMNS"),
     **dict.fromkeys(scripture_csv_keys, "SCRIPTURE_REFS"),
-    "Question": "CATECHISM_QUESTION",
-    "Answer": "CATECHISM_ANSWER",
-    "Baptisms": "BAPTISMS",
-    "Collect": "COLLECT",
-    "Church of the Month": "CHURCH_OF_THE_MONTH",
+    **dict.fromkeys(extra_csv_keys, "EXTRAS"),
 }
 
 
