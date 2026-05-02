@@ -191,6 +191,23 @@ def test_extras_array_with_descriptive_headings():
     ]
 
 
+def test_announcements_array_with_descriptive_headings():
+    """Test that 'Announcement N - <label>' columns build the ANNOUNCEMENTS array."""
+    data = {
+        "Date": ["2024-02-18"],
+        "Announcement 1 - Prayer": ["Please pray for..."],
+        "Announcement 2 - Calendar": ["Wednesday Bible study at 7pm"],
+    }
+    schedule = pd.DataFrame(data)
+    date = pd.to_datetime("2024-02-18").date()
+    result = process_schedule_data(schedule, date)
+
+    assert result["ANNOUNCEMENTS"] == [
+        "Please pray for...",
+        "Wednesday Bible study at 7pm",
+    ]
+
+
 def test_array_preserves_gaps_as_none():
     """Test that missing columns in the middle produce None, not a shifted array."""
     data = {

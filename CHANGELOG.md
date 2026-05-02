@@ -5,8 +5,9 @@
 ### Added
 - `--hymnal-dir`, if specified, will populate an array of musical scores in `HYMN_SCORES` which correspond by index to `HYMNS`. Each score is an object with a `number` field (the hymn number) and a `sheets` field — an array of base64 uris (one rasterized image per page). Entries are `null` for hymns whose score could not be loaded.
 - Schedule column headers that build arrays are matched by prefix, so you can add a note about the conventional purpose of data at this index. 
-	e.g. `Hymn 1 - Call to Worship`.
-- `Extra N` schedule columns are collected into an `EXTRAS` array for arbitrary per-service content (e.g. collects, catechism, baptism announcements). Indexing follows the same convention as hymns and scripture references.
+    e.g. `Hymn 1 - Call to Worship`.
+- `Extra N` schedule columns are collected into an `EXTRAS` array for arbitrary per-service content (e.g. catechism, baptism announcements). Indexing follows the same convention as hymns and scripture references.
+- `Announcement N` schedule columns are collected into an `ANNOUNCEMENTS` array, indexed the same way as `HYMNS`, `SCRIPTURE_REFS`, and `EXTRAS`.
 
 ### Changed
 - Scripture references are modeled as an array, like hymns.
