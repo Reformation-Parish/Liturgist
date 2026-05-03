@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "liturgist"
-version = "2.0.0"
+version = "3.0.0"
 description = "A liturgical document generator"
 readme = "README.md"
 license = {file = "LICENSE"}
@@ -15,7 +15,7 @@ maintainers = [
     {name = "Justin", email = "justin@jzbrooks.com"}
 ]
 classifiers = [
-    "Development Status :: 4 - Beta",
+    "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Religion",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
@@ -31,29 +31,29 @@ classifiers = [
 keywords = ["liturgy", "document", "generator", "pdf", "handlebars", "template"]
 requires-python = ">=3.10"
 dependencies = [
-    "pandas>=2.0.0",
+    "pandas>=2.2.0",
     "pybars3>=0.9.7",
     "weasyprint>=66.0",
-    "pypandoc-binary>=1.14",
+    "pypandoc-binary>=1.15",
     "openpyxl>=3.1.0",
     "odfpy>=1.4.0",
-    "pymupdf>=1.24.0",
+    "pymupdf>=1.26.0",
 ]
 
 [project.optional-dependencies]
 dev = [
-    "black>=23.0.0",
-    "ruff>=0.1.0",
-    "pytest>=7.0.0",
-    "pytest-cov>=4.0.0",
+    "black>=24.0.0",
+    "ruff>=0.6.0",
+    "pytest>=8.0.0",
+    "pytest-cov>=5.0.0",
 ]
 test = [
-    "pytest>=7.0.0",
-    "pytest-cov>=4.0.0",
+    "pytest>=8.0.0",
+    "pytest-cov>=5.0.0",
 ]
 docs = [
-    "mkdocs>=1.5.0",
-    "mkdocs-material>=9.0.0",
+    "mkdocs>=1.6.0",
+    "mkdocs-material>=9.5.0",
 ]
 
 [project.urls]

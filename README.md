@@ -20,7 +20,7 @@ pip install -e ".[dev]"
 
 ## System Requirements
 
-* Python 3.9 or higher
+* Python 3.10 or higher
 * For PDF generation: `brew install pango` (macOS) or equivalent system dependency
 
 ## Usage
