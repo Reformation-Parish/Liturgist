@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-import fitz  # pymupdf
+import pymupdf as fitz
 
 from liturgist.hymnal import (
     HymnRef,

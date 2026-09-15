@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+## 3.1.1 - 2026-09-14
+
+### Changed
+- Multi-verse scripture expansions use superscript verse numbers
+
+### Fixed
+- `import fitz` no longer prints a PyMuPDF deprecation warning to stdout (broke `--print-json` consumers)
+
 ## 3.1.0 - 2026-05-12
 
 ### Added
