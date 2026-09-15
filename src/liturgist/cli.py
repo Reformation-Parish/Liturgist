@@ -17,6 +17,18 @@ from .core import (
     process_schedule_data,
     read_schedule,
 )
+from .scripture import ScriptureFormat
+
+
+def _scripture_format_from_template(template: str | None) -> ScriptureFormat:
+    if template is None:
+        return "plaintext"
+    ext = Path(template).suffix.lstrip(".").lower()
+    if ext in ("html", "htm"):
+        return "html"
+    if ext in ("md", "markdown"):
+        return "md"
+    return "plaintext"
 
 
 def parse_arguments() -> argparse.Namespace:
@@ -129,7 +141,11 @@ def main() -> None:
     # Process schedule data
     try:
         data = process_schedule_data(
-            schedule, date, args.bible_json_path, args.hymnal_dir
+            schedule,
+            date,
+            args.bible_json_path,
+            args.hymnal_dir,
+            scripture_format=_scripture_format_from_template(args.template),
         )
     except ValueError as e:
         print(str(e), file=sys.stderr)

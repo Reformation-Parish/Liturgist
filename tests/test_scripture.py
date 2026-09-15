@@ -27,6 +27,18 @@ def test_chapter_verse_range_reference_found():
     )
 
 
+def test_chapter_verse_range_html_prefix():
+    """Test html format uses superscript verse prefixes."""
+    json_path = Path("samples/kjv.json")
+    bible_text = json_path.read_text(encoding="utf-8")
+    bible_data = json.loads(bible_text)
+
+    result = get_scripture_text(bible_data, "John 3:16-17", format="html")
+    assert result.startswith("<sup>16</sup>")
+    assert "<sup>17</sup>" in result
+    assert not result.startswith("<sup>16</sup> ")
+
+
 def test_non_contiguous_references_found():
     """Test multiple references are matched."""
     json_path = Path("samples/kjv.json")

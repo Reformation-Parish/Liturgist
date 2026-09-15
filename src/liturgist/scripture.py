@@ -7,16 +7,29 @@ the corresponding verse text out of bible JSON data.
 
 import re
 import sys
-from typing import Any
+from typing import Any, Literal
+
+ScriptureFormat = Literal["plaintext", "md", "html"]
 
 
-def get_scripture_text(data: dict[str, Any], passage: str) -> str:
+def _verse_prefix(n: int, fmt: ScriptureFormat) -> str:
+    if fmt in ("md", "html"):
+        return f"<sup>{n}</sup>"
+    return f"{n}. "
+
+
+def get_scripture_text(
+    data: dict[str, Any],
+    passage: str,
+    format: ScriptureFormat = "plaintext",
+) -> str:
     """
     Extract scripture text from bible data for a given passage.
 
     Args:
         data: Dictionary containing bible data with books/chapters/verses
         passage: Scripture reference (e.g. "Jude 3", "John 3:16", or "Romans 8:28-30")
+        format: Verse prefix style — plaintext "N. ", md/html "<sup>N</sup> "
 
     Returns:
         Formatted scripture text with verse numbers
@@ -70,12 +83,13 @@ def get_scripture_text(data: dict[str, Any], passage: str) -> str:
                 verses = [selected[0]]
             else:
                 verses = [
-                    f"{idx + 1 + start_verse_index}. {verse}"
+                    f"{_verse_prefix(idx + 1 + start_verse_index, format)}{verse}"
                     for idx, verse in enumerate(selected)
                 ]
         else:
             verses = [
-                f"{idx + 1}. {verse}" for idx, verse in enumerate(chapter["verses"])
+                f"{_verse_prefix(idx + 1, format)}{verse}"
+                for idx, verse in enumerate(chapter["verses"])
             ]
 
         next_match = next(match_iter, None)

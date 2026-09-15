@@ -11,7 +11,7 @@ import pandas as pd
 from pybars import Compiler
 
 from .hymnal import load_hymnal_scores
-from .scripture import get_scripture_text
+from .scripture import ScriptureFormat, get_scripture_text
 
 hymn_csv_keys = [f"Hymn {i}" for i in range(1, 50)]
 scripture_csv_keys = [f"Scripture {i}" for i in range(1, 50)]
@@ -124,6 +124,7 @@ def process_schedule_data(
     date: date,
     bible_json_path: str | Path | None = None,
     hymnal_dir: str | Path | None = None,
+    scripture_format: ScriptureFormat = "plaintext",
 ) -> dict[str, Any]:
     """
     Process schedule data for a specific date and return template data.
@@ -133,6 +134,7 @@ def process_schedule_data(
         date: Date to extract data for
         bible_json_path: Optional path to bible JSON file for scripture text
         hymnal_dir: Optional path to directory containing hymn sheet music files
+        scripture_format: Verse prefix style for expanded scripture text
 
     Returns:
         Dictionary of processed data for template rendering
@@ -204,7 +206,11 @@ def process_schedule_data(
                 if not isinstance(scriptures, list):
                     scriptures = [scriptures]
                 data["EXPANDED_SCRIPTURE_REFS"] = [
-                    get_scripture_text(bible_data, ref) if ref is not None else None
+                    (
+                        get_scripture_text(bible_data, ref, format=scripture_format)
+                        if ref is not None
+                        else None
+                    )
                     for ref in scriptures
                 ]
 
