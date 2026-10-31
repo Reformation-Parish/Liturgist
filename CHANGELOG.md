@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Added
+- `Reminder N` schedule columns are collected into a `REMINDERS` array, indexed the same way as `ANNOUNCEMENTS`.
+
 ## 3.1.1 - 2026-09-14
 
 ### Changed
